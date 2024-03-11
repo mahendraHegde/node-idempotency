@@ -1,0 +1,16 @@
+{
+  "name": "@idempotent-http/core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Mahendra Hegde",
+  "license": "ISC",
+  "dependencies": {
+    "@idempotent-http/storage": "workspace:^"
+  }
+}
