@@ -104,12 +104,12 @@ export class IdempotentHTTP {
       };
       const cacheKey = this.getIdempotencyKey(req);
       this.validateRequest(req);
-      const alreadySeen = await this.storage.setIfNotExists(
+      const isNew = await this.storage.setIfNotExists(
         cacheKey,
         JSON.stringify(payload),
         { ttl: this.options.cacheTTLMS },
       );
-      if (alreadySeen) {
+      if (!isNew) {
         const data = JSON.parse(
           await this.storage.get(cacheKey),
         ) as StoragePayload<BodyType, ErrorType>;
