@@ -13,7 +13,7 @@ export type HTTPMethods =
 export interface Options {
   allowedMethods?: HTTPMethods[];
   excludeMethods?: HTTPMethods[];
-  headerKey?: string;
+  idempotencyKey?: string;
   keyMaxLength?: number;
   cacheKeyPrefix?: string;
   cacheTTLMS?: number;
@@ -23,20 +23,21 @@ export interface IdempotencyParams {
   headers: Record<string, unknown>;
   path: string;
   body?: Record<string, unknown>;
-  method: HTTPMethods;
+  method?: HTTPMethods;
   options?: Options;
+}
+
+export interface IdempotencyParamsInternal extends IdempotencyParams {
+  options: Required<Options>;
 }
 
 export enum RequestStatusEnum {
   IN_PROGRESS = "IN_PROGRESS",
-  SUCCESS = "SUCCESS",
-  ERROR = "ERROR",
+  COMPLETE = "COMPLETE",
 }
 
 export enum HttpResponseHeaderKeysEnum {
-  RETRY_AFTER = "Retry-After",
   IDEMPOTENCY_KEY = "Idempotency-Key",
-  IDEMPOTENCY_REPLAY = "Idempotency-Replay",
 }
 
 export interface StoragePayload<BodyType = unknown, ErrorType = unknown> {
@@ -46,8 +47,7 @@ export interface StoragePayload<BodyType = unknown, ErrorType = unknown> {
 }
 
 export interface IdempotencyResponse<BodyType = unknown, ErrorType = unknown> {
-  headers: Record<string, unknown>;
   body?: BodyType;
-  statusCode: number;
+  additional?: Record<string, unknown>;
   error?: ErrorType;
 }

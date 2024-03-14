@@ -1,5 +1,5 @@
 {
-  "name": "@idempotent-http/storage",
+  "name": "@node-idempotency/storage",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",

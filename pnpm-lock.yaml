@@ -37,7 +37,7 @@ importers:
 
   packages/core:
     dependencies:
-      "@idempotent-http/storage":
+      "@node-idempotency/storage":
         specifier: workspace:^
         version: link:../storage
 

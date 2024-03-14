@@ -1,13 +1,14 @@
 {
-  "name": "idempotent-http",
+  "name": "node-idempotency",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix",
-    "format": "prettier --write ."
+    "lint": "eslint packages/**/*.ts",
+    "lint:fix": "eslint packages/**/*.ts --fix",
+    "format": "prettier --write .",
+    "build": "pnpm --filter  @node-idempotency/* build"
   },
   "keywords": [],
   "author": "Mahendra Hegde",

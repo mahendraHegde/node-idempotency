@@ -1,9 +1,13 @@
 export interface StorageAdapter {
-  setIfNotExists(
+  setIfNotExists: (
     key: string,
     val: string,
     { ttl }?: { ttl?: number },
-  ): Promise<boolean>;
-  set(key: string, val: string, { ttl }: { ttl?: number }): Promise<boolean>;
-  get(key: string): Promise<string>;
+  ) => Promise<boolean>;
+  set: (
+    key: string,
+    val: string,
+    { ttl }: { ttl?: number },
+  ) => Promise<boolean>;
+  get: (key: string) => Promise<string>;
 }

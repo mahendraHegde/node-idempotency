@@ -1,5 +1,5 @@
 {
-  "name": "@idempotent-http/core",
+  "name": "@node-idempotency/core",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,6 +11,6 @@
   "author": "Mahendra Hegde",
   "license": "ISC",
   "dependencies": {
-    "@idempotent-http/storage": "workspace:^"
+    "@node-idempotency/storage": "workspace:^"
   }
 }
