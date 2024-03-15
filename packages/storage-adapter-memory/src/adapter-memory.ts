@@ -1,49 +1,50 @@
-import { type StorageAdapter } from '@node-idempotency/storage'
-import { type CacheItem } from './types'
+import { type StorageAdapter } from "@node-idempotency/storage";
+import { type CacheItem } from "./types";
 
 export class MemoryStorageAdapter implements StorageAdapter {
-  private readonly cache = new Map<string, CacheItem>()
+  private readonly cache = new Map<string, CacheItem>();
 
-  private buildCacheValue (val: string, ttl?: number): CacheItem {
+  private buildCacheValue(val: string, ttl?: number): CacheItem {
     const v: CacheItem = {
       item: val,
-      ttl
-    }
+      ttl,
+    };
     if (ttl !== undefined && !isNaN(ttl)) {
-      const date = new Date()
-      date.setMilliseconds(date.getMilliseconds() + ttl)
-      v.ttl = date.getTime()
+      const date = new Date();
+      date.setMilliseconds(date.getMilliseconds() + ttl);
+      v.ttl = date.getTime();
     }
-    return v
+    return v;
   }
 
-  async setIfNotExists (
+  async setIfNotExists(
     key: string,
     val: string,
-    { ttl }: { ttl?: number | undefined } = {}
+    { ttl }: { ttl?: number | undefined } = {},
   ): Promise<boolean> {
     if (!this.cache.get(key)) {
-      this.cache.set(key, this.buildCacheValue(val, ttl))
-      return true
+      this.cache.set(key, this.buildCacheValue(val, ttl));
+      return true;
     }
-    return false
+    return false;
   }
 
-  async set (
+  async set(
     key: string,
     val: string,
-    { ttl }: { ttl?: number | undefined }
+    { ttl }: { ttl?: number | undefined },
   ): Promise<void> {
-    this.cache.set(key, this.buildCacheValue(val, ttl))
+    this.cache.set(key, this.buildCacheValue(val, ttl));
   }
 
-  async get (key: string): Promise<string | undefined> {
-    const val = this.cache.get(key)
+  async get(key: string): Promise<string | undefined> {
+    const val = this.cache.get(key);
     if (val?.ttl && !isNaN(val.ttl)) {
       if (new Date() > new Date(val.ttl)) {
-        return undefined
+        this.cache.delete(key);
+        return undefined;
       }
     }
-    return val?.item
+    return val?.item;
   }
 }

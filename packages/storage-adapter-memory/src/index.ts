@@ -1,1 +1,1 @@
-export * from './adapter-memory'
+export * from "./adapter-memory";
