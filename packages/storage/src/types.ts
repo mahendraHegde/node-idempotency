@@ -3,11 +3,7 @@ export interface StorageAdapter {
     key: string,
     val: string,
     { ttl }?: { ttl?: number },
-  ) => Promise<boolean>;
-  set: (
-    key: string,
-    val: string,
-    { ttl }: { ttl?: number },
-  ) => Promise<boolean>;
-  get: (key: string) => Promise<string>;
+  ) => Promise<boolean>
+  set: (key: string, val: string, { ttl }: { ttl?: number }) => Promise<void>
+  get: (key: string) => Promise<string | undefined>
 }

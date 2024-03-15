@@ -8,7 +8,9 @@
     "lint": "eslint packages/**/*.ts",
     "lint:fix": "eslint packages/**/*.ts --fix",
     "format": "prettier --write .",
-    "build": "pnpm --filter  @node-idempotency/* build"
+    "build": "pnpm --filter  @node-idempotency/* build",
+    "typecheck": "pnpm --filter  @node-idempotency/* typecheck",
+    "precommit": "pnpm format && pnpm lint:fix && pnpm typecheck"
   },
   "keywords": [],
   "author": "Mahendra Hegde",

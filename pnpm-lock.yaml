@@ -43,6 +43,12 @@ importers:
 
   packages/storage: {}
 
+  packages/storage-adapter-memory:
+    dependencies:
+      "@node-idempotency/storage":
+        specifier: workspace:^
+        version: link:../storage
+
 packages:
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution:
