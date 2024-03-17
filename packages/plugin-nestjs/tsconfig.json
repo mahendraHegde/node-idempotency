@@ -6,7 +6,7 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
-    "types": ["node"],
+    "experimentalDecorators": true,
     "target": "ES2021",
     "allowJs": false,
     "esModuleInterop": false,
@@ -14,6 +14,6 @@
     "skipLibCheck": true,
     "outDir": "dist/"
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src", "tests/e2e/modules"],
+  "exclude": ["node_modules", "dist", "examples"]
 }

@@ -1,4 +1,4 @@
 export interface CacheItem {
-  item: string;
-  ttl?: number;
+  item: string
+  ttl?: number
 }
