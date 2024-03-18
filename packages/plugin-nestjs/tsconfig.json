@@ -14,6 +14,6 @@
     "skipLibCheck": true,
     "outDir": "dist/"
   },
-  "include": ["src", "tests/e2e/modules"],
+  "include": ["src","tests"],
   "exclude": ["node_modules", "dist", "examples"]
 }

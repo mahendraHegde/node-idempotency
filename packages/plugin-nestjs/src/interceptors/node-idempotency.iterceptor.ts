@@ -7,176 +7,182 @@ import {
   HttpException,
   InternalServerErrorException,
   Inject,
-  HttpStatus,
-} from "@nestjs/common";
-import { StorageAdapter } from "@node-idempotency/storage";
+  HttpStatus
+} from '@nestjs/common'
+import { StorageAdapter } from '@node-idempotency/storage'
 import {
   Idempotency,
   IdempotencyError,
   type IdempotencyParams,
   type IdempotencyResponse,
-  Options,
-} from "@node-idempotency/core";
+  IdempotencyOptions
+} from '@node-idempotency/core'
 
-import { type FastifyReply, type FastifyRequest } from "fastify";
-import { type Response, type Request } from "express";
+import { type FastifyReply, type FastifyRequest } from 'fastify'
+import { type Response, type Request } from 'express'
 
-import { type Observable, of, throwError, map, catchError } from "rxjs";
-import { Reflector } from "@nestjs/core";
+import { type Observable, of, throwError, map, catchError } from 'rxjs'
+import { Reflector } from '@nestjs/core'
 import {
   IDEMPOTENCY_OPTIONS,
+  IDEMPOTENCY_REPLAYED_HEADER,
   IDEMPOTENCY_STORAGE,
   headers2Cache,
-  idempotency2HttpCodeMap,
-} from "../constants";
-import { Stream } from "stream";
+  idempotency2HttpCodeMap
+} from '../constants'
+import { Stream } from 'stream'
+import { type SerializedAPIException } from '../types'
 
 @Injectable()
 export class NodeIdempotencyInterceptor implements NestInterceptor {
-  nodeIdempotency: Idempotency;
-  constructor(
-    protected readonly reflector: Reflector,
+  nodeIdempotency: Idempotency
+  constructor (
+    private readonly reflector: Reflector,
     @Inject(IDEMPOTENCY_STORAGE)
     private readonly stoarge: StorageAdapter,
     @Inject(IDEMPOTENCY_OPTIONS)
-    optons?: Options,
+    optons?: IdempotencyOptions
   ) {
-    this.nodeIdempotency = new Idempotency(this.stoarge, optons);
+    this.nodeIdempotency = new Idempotency(this.stoarge, optons)
   }
 
-  async intercept(
+  async intercept (
     context: ExecutionContext,
-    next: CallHandler,
+    next: CallHandler
   ): Promise<Observable<any>> {
     const request = context
       .switchToHttp()
-      .getRequest<FastifyRequest | Request>();
+      .getRequest<FastifyRequest | Request>()
     const options =
       this.reflector.get(IDEMPOTENCY_OPTIONS, context.getHandler()) ??
-      this.reflector.get(IDEMPOTENCY_OPTIONS, context.getClass());
+      this.reflector.get(IDEMPOTENCY_OPTIONS, context.getClass())
     const idempotencyReq: IdempotencyParams = {
       headers: request.headers,
       body: request.body,
       path: request.url,
       method: request.method,
-      options,
-    };
+      options
+    }
     try {
       const idempotencyResponse: IdempotencyResponse | undefined =
-        await this.nodeIdempotency.onRequest(idempotencyReq);
+        await this.nodeIdempotency.onRequest<unknown, SerializedAPIException>(idempotencyReq)
       if (!idempotencyResponse) {
-        return await this.handleNewRequest(idempotencyReq, context, next);
+        return await this.handleNewRequest(idempotencyReq, context, next)
       }
+      // this is a duplicate request
       const response = context
         .switchToHttp()
-        .getResponse<FastifyReply | Response>();
+        .getResponse<FastifyReply | Response>()
       if (idempotencyResponse.additional?.statusCode) {
-        const { statusCode } = idempotencyResponse.additional;
-        if ("code" in response && typeof response.code === "function") {
+        const { statusCode } = idempotencyResponse.additional
+        if ('code' in response && typeof response.code === 'function') {
           // fastify
-          response.code(statusCode as number);
+          void response.code(statusCode as number)
         } else {
           // express
-          response.status(statusCode as number);
+          void response.status(statusCode as number)
         }
       }
       const headers = Object.values(headers2Cache).reduce<
-        Record<string, string>
+      Record<string, string>
       >((res, cur) => {
         if (idempotencyResponse?.additional?.[cur]) {
-          res[cur] = idempotencyResponse.additional[cur] as string;
+          res[cur] = idempotencyResponse.additional[cur] as string
         }
-        return res;
-      }, {});
-      this.setHeaders(response, headers);
-      if (typeof idempotencyResponse.body !== undefined) {
-        return of(idempotencyResponse.body);
+        return res
+      }, {})
+      this.setHeaders(response, {
+        ...headers,
+        [IDEMPOTENCY_REPLAYED_HEADER]: 'true'
+      })
+      if (typeof idempotencyResponse.body !== 'undefined') {
+        return of(idempotencyResponse.body)
       }
-      throw this.buildError(idempotencyResponse.error);
+      throw this.buildError(idempotencyResponse.error as SerializedAPIException)
     } catch (err) {
       if (err instanceof IdempotencyError) {
         const status =
-          idempotency2HttpCodeMap[err.code] || HttpStatus.INTERNAL_SERVER_ERROR;
-        return throwError(() => new HttpException(err.message, status));
+          idempotency2HttpCodeMap[err.code] || HttpStatus.INTERNAL_SERVER_ERROR
+        return throwError(() => new HttpException(err.message, status))
       }
       if (err instanceof HttpException) {
-        return throwError(() => err);
+        return throwError(() => err)
       }
     }
 
     // something unexpected happened, both cached response and handler did not execute as expected
-    return throwError(() => new InternalServerErrorException());
+    return throwError(() => new InternalServerErrorException())
   }
 
-  private buildError(error: any): HttpException {
-    const statusCode = error.status || error.response?.statusCode || 500;
-    if (statusCode == 500 && !error.response) {
+  private buildError (error: SerializedAPIException): HttpException {
+    const statusCode = error.status ?? error.response?.statusCode ?? 500
+    if (statusCode === 500 && !error.response) {
       // some unhandled exception occurred
-      return new InternalServerErrorException();
+      return new InternalServerErrorException()
     }
 
     return new HttpException(
-      error.response || error.message,
+      error.response ?? error.message,
       statusCode,
-      error.response?.options,
-    );
+      error.options
+    )
   }
 
-  private setHeaders(
+  private setHeaders (
     response: FastifyReply | Response,
-    headers: Record<string, string>,
-  ) {
-    Object.keys(headers).map((key) => {
+    headers: Record<string, string>
+  ): void {
+    Object.keys(headers).forEach((key) => {
       if (headers[key]) {
-        if ("set" in response && typeof response.set === "function") {
+        if ('set' in response && typeof response.set === 'function') {
           // express
-          response.set(key, headers[key]);
+          void response.set(key, headers[key])
         } else {
           // fastify
-          response.header(key, headers[key]);
+          void response.header(key, headers[key])
         }
       }
-    });
+    })
   }
 
-  private async handleNewRequest(
+  private async handleNewRequest (
     idempotencyReq: IdempotencyParams,
     context: ExecutionContext,
-    next: CallHandler,
+    next: CallHandler
   ): Promise<Observable<unknown>> {
     return next.handle().pipe(
       map(async (response) => {
         if (response instanceof Stream) {
-          return response;
+          return response
         }
         const httpResponse = context
           .switchToHttp()
-          .getResponse<FastifyReply | Response>();
-        const statusCode = httpResponse.statusCode;
-        const additional = { statusCode };
-        Object.values(headers2Cache).map((header) => {
-          const head = httpResponse.getHeader(header);
+          .getResponse<FastifyReply | Response>()
+        const statusCode = httpResponse.statusCode
+        const additional = { statusCode }
+        Object.values(headers2Cache).forEach((header) => {
+          const head = httpResponse.getHeader(header)
           if (head) {
-            additional[header] = head;
+            additional[header] = head
           }
-        });
+        })
         const res: IdempotencyResponse = {
           additional,
-          body: response,
-        };
-        await this.nodeIdempotency.onResponse(idempotencyReq, res);
-        return response;
+          body: response
+        }
+        await this.nodeIdempotency.onResponse(idempotencyReq, res)
+        return response
       }),
       catchError((err) => {
-        const httpException = this.buildError(err);
-        const error = err instanceof HttpException ? err : httpException;
+        const httpException = this.buildError(err as SerializedAPIException)
+        const error = err instanceof HttpException ? err : httpException
         const res: IdempotencyResponse = {
           additional: { statusCode: httpException.getStatus() },
-          error,
-        };
-        this.nodeIdempotency.onResponse(idempotencyReq, res);
-        throw err;
-      }),
-    );
+          error
+        }
+        this.nodeIdempotency.onResponse(idempotencyReq, res).catch(() => {})
+        throw err
+      })
+    )
   }
 }
