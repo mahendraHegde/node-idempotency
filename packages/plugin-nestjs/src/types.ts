@@ -1,3 +1,3 @@
 export enum StorageAdapterEnum {
-  memory = 'memory',
+  memory = "memory",
 }
