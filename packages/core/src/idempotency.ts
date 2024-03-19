@@ -1,10 +1,10 @@
 import { type StorageAdapter } from "@node-idempotency/storage";
 import {
-  HttpResponseHeaderKeysEnum,
+  HttpHeaderKeysEnum,
   type IdempotencyParams,
   type IdempotencyParamsInternal,
   type IdempotencyResponse,
-  type Options,
+  type IdempotencyOptions,
   RequestStatusEnum,
   type StoragePayload,
 } from "./types";
@@ -13,20 +13,17 @@ import {
   IDEMPOTENCY_CACHE_TTL_MS,
   IDEMPOTENCY_KEY_LEN,
 } from "./constants";
-import { IdempotencyError, errorCodes } from "./error";
+import { IdempotencyError, idempotencyErrorCodes } from "./error";
 import { createHash } from "crypto";
 export class Idempotency {
-  options: Required<Options>;
+  options: Required<IdempotencyOptions>;
   constructor(
     private readonly storage: StorageAdapter,
-    options?: Options,
+    options?: IdempotencyOptions,
   ) {
     this.options = {
-      allowedMethods: [],
-      excludeMethods: [],
       cacheKeyPrefix: IDEMPOTENCY_CACHE_KEY_PREFIX,
-      idempotencyKey:
-        HttpResponseHeaderKeysEnum.IDEMPOTENCY_KEY.toLocaleLowerCase(),
+      idempotencyKey: HttpHeaderKeysEnum.IDEMPOTENCY_KEY.toLocaleLowerCase(),
       keyMaxLength: IDEMPOTENCY_KEY_LEN,
       cacheTTLMS: IDEMPOTENCY_CACHE_TTL_MS,
       enforceIdempotency: false,
@@ -34,7 +31,9 @@ export class Idempotency {
     };
   }
 
-  private buildRequestOptions(options?: Options): Required<Options> {
+  private buildRequestOptions(
+    options?: IdempotencyOptions,
+  ): Required<IdempotencyOptions> {
     const enforceIdempotency =
       options?.enforceIdempotency !== undefined
         ? options?.enforceIdempotency
@@ -51,23 +50,22 @@ export class Idempotency {
     };
   }
 
+  private getIdempotencyKey(
+    req: IdempotencyParamsInternal,
+  ): string | undefined {
+    const key = Object.keys(req.headers).find(
+      (key) => key.toLowerCase() === req.options.idempotencyKey.toLowerCase(),
+    );
+    return key ? (req.headers[key] as string) : undefined;
+  }
+
   private isEnabled(req: IdempotencyParamsInternal): boolean {
-    if (
-      req.method &&
-      req.options.allowedMethods?.length &&
-      !req.options.allowedMethods.includes(req.method)
-    ) {
-      return false;
-    }
-    if (req.method && req.options.excludeMethods?.includes(req.method)) {
-      return false;
-    }
-    const idempotencyKey = req.headers[req.options.idempotencyKey];
+    const idempotencyKey = this.getIdempotencyKey(req);
     if (!idempotencyKey) {
       if (req.options?.enforceIdempotency) {
         throw new IdempotencyError(
           "Idempotency-Key is missing",
-          errorCodes.IDEMPOTENCY_KEY_LEN_EXEEDED,
+          idempotencyErrorCodes.IDEMPOTENCY_KEY_LEN_EXEEDED,
         );
       }
       return false;
@@ -76,17 +74,17 @@ export class Idempotency {
   }
 
   private validateRequest(req: IdempotencyParamsInternal): void {
-    const idempotencyKey = req.headers[req.options.idempotencyKey] as string;
-    if (idempotencyKey.length > req.options.keyMaxLength) {
+    const idempotencyKey = this.getIdempotencyKey(req);
+    if (idempotencyKey && idempotencyKey.length > req.options.keyMaxLength) {
       throw new IdempotencyError(
         "Idempotency-Key length exceeds max allowed length",
-        errorCodes.IDEMPOTENCY_KEY_LEN_EXEEDED,
+        idempotencyErrorCodes.IDEMPOTENCY_KEY_LEN_EXEEDED,
       );
     }
   }
 
-  private getIdempotencyKey(req: IdempotencyParamsInternal): string {
-    const idempotencyKey = req.headers[req.options.idempotencyKey] as string;
+  private getIdempotencyCacheKey(req: IdempotencyParamsInternal): string {
+    const idempotencyKey = this.getIdempotencyKey(req);
     const { path, method } = req;
     return `${req.options.cacheKeyPrefix}:${method}:${path}:${idempotencyKey}`;
   }
@@ -112,7 +110,7 @@ export class Idempotency {
         status: RequestStatusEnum.IN_PROGRESS,
         fingerPrint,
       };
-      const cacheKey = this.getIdempotencyKey(reqInternal);
+      const cacheKey = this.getIdempotencyCacheKey(reqInternal);
       this.validateRequest(reqInternal);
       const isNew = await this.storage.setIfNotExists(
         cacheKey,
@@ -128,13 +126,13 @@ export class Idempotency {
         if (data.status === RequestStatusEnum.IN_PROGRESS) {
           throw new IdempotencyError(
             "A request is outstanding for this Idempotency-Key",
-            errorCodes.REQUEST_IN_PROGRESS,
+            idempotencyErrorCodes.REQUEST_IN_PROGRESS,
           );
         } else {
           if (fingerPrint !== data.fingerPrint) {
             throw new IdempotencyError(
               "Idempotency-Key is already used",
-              errorCodes.IDEMPOTENCY_FINGERPRINT_MISSMATCH,
+              idempotencyErrorCodes.IDEMPOTENCY_FINGERPRINT_MISSMATCH,
             );
           }
           return data.response;
@@ -150,7 +148,7 @@ export class Idempotency {
     const reqInternal = this.getInternalRequest(req);
     if (this.isEnabled(reqInternal)) {
       const fingerPrint = this.getFingerPrint(reqInternal);
-      const cacheKey = this.getIdempotencyKey(reqInternal);
+      const cacheKey = this.getIdempotencyCacheKey(reqInternal);
       const payload: StoragePayload = {
         status: RequestStatusEnum.COMPLETE,
         fingerPrint,

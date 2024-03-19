@@ -2,7 +2,8 @@
   "name": "@node-idempotency/core",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
@@ -12,6 +13,6 @@
   "author": "Mahendra Hegde",
   "license": "ISC",
   "dependencies": {
-    "@node-idempotency/storage": "workspace:^"
+    "@node-idempotency/storage": "1.0.0"
   }
 }

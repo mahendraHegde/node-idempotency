@@ -1,18 +1,4 @@
-export type HTTPMethods =
-  | "get"
-  | "post"
-  | "put"
-  | "patch"
-  | "delete"
-  | "GET"
-  | "POST"
-  | "PUT"
-  | "PATCH"
-  | "DELETE";
-
-export interface Options {
-  allowedMethods?: HTTPMethods[];
-  excludeMethods?: HTTPMethods[];
+export interface IdempotencyOptions {
   idempotencyKey?: string;
   keyMaxLength?: number;
   cacheKeyPrefix?: string;
@@ -23,12 +9,12 @@ export interface IdempotencyParams {
   headers: Record<string, unknown>;
   path: string;
   body?: Record<string, unknown>;
-  method?: HTTPMethods;
-  options?: Options;
+  method?: string;
+  options?: IdempotencyOptions;
 }
 
 export interface IdempotencyParamsInternal extends IdempotencyParams {
-  options: Required<Options>;
+  options: Required<IdempotencyOptions>;
 }
 
 export enum RequestStatusEnum {
@@ -36,7 +22,7 @@ export enum RequestStatusEnum {
   COMPLETE = "COMPLETE",
 }
 
-export enum HttpResponseHeaderKeysEnum {
+export enum HttpHeaderKeysEnum {
   IDEMPOTENCY_KEY = "Idempotency-Key",
 }
 

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "pnpm --filter  @node-idempotency/* test",
+    "test:e2e": "pnpm --filter  @node-idempotency/* test:e2e",
     "lint": "eslint packages/**/*.ts",
     "lint:fix": "eslint packages/**/*.ts --fix",
     "format": "prettier --write .",
@@ -16,6 +17,9 @@
   "author": "Mahendra Hegde",
   "license": "ISC",
   "devDependencies": {
+    "@nestjs/platform-express": "^10.3.3",
+    "@nestjs/testing": "^10.3.3",
+    "@types/jest": "^29.5.12",
     "@types/node": "^20.11.25",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "eslint": "^8.0.1",
@@ -23,7 +27,11 @@
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-unused-imports": "^3.1.0",
+    "jest": "^29.7.0",
     "prettier": "^3.2.5",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2",
     "typescript": "^5.4.2"
   }
 }
