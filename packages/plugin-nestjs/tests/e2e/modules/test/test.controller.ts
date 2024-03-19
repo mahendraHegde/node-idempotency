@@ -9,7 +9,7 @@ import {
 import { Idempotent } from "../../../../src/index";
 
 @Controller()
-@Idempotent({ keyMaxLength: 100 })
+@Idempotent({ keyMaxLength: 3, enforceIdempotency: true })
 export class TestController {
   counter = 0;
   slowCounter = 0;

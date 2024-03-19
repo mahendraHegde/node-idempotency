@@ -91,6 +91,17 @@ describe("Node-Idempotency", () => {
         );
       });
 
+      it("should return 400 when idempotency key is not sent when its needed", async () => {
+        await request(server).get("/").expect(400);
+      });
+
+      it("should return 400 when idempotency key exceeds length", async () => {
+        await request(server)
+          .get("/")
+          .set({ [idempotencyKey]: "2345678" })
+          .expect(400);
+      });
+
       it("should return a conflict when parallel requests are made", async () => {
         const [res1, res2] = await Promise.all([
           request(server)
