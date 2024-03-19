@@ -1,16 +1,16 @@
-import { Module } from '@nestjs/common'
+import { Module } from "@nestjs/common";
 import {
   NodeIdempotencyModule,
-  StorageAdapterEnum
-} from '../../../../src/index'
-import { ExpressController } from './test.controller'
+  StorageAdapterEnum,
+} from "../../../../src/index";
+import { TestController } from "./test.controller";
 
 @Module({
   imports: [
     NodeIdempotencyModule.forRootAsync({
-      storageAdapter: StorageAdapterEnum.memory
-    })
+      storageAdapter: StorageAdapterEnum.memory,
+    }),
   ],
-  controllers: [ExpressController]
+  controllers: [TestController],
 })
 export class TestModule {}

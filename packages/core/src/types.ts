@@ -1,39 +1,39 @@
 export interface IdempotencyOptions {
-  idempotencyKey?: string
-  keyMaxLength?: number
-  cacheKeyPrefix?: string
-  cacheTTLMS?: number
-  enforceIdempotency?: boolean
+  idempotencyKey?: string;
+  keyMaxLength?: number;
+  cacheKeyPrefix?: string;
+  cacheTTLMS?: number;
+  enforceIdempotency?: boolean;
 }
 export interface IdempotencyParams {
-  headers: Record<string, unknown>
-  path: string
-  body?: Record<string, unknown>
-  method?: string
-  options?: IdempotencyOptions
+  headers: Record<string, unknown>;
+  path: string;
+  body?: Record<string, unknown>;
+  method?: string;
+  options?: IdempotencyOptions;
 }
 
 export interface IdempotencyParamsInternal extends IdempotencyParams {
-  options: Required<IdempotencyOptions>
+  options: Required<IdempotencyOptions>;
 }
 
 export enum RequestStatusEnum {
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETE = 'COMPLETE',
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETE = "COMPLETE",
 }
 
 export enum HttpHeaderKeysEnum {
-  IDEMPOTENCY_KEY = 'Idempotency-Key',
+  IDEMPOTENCY_KEY = "Idempotency-Key",
 }
 
 export interface StoragePayload<BodyType = unknown, ErrorType = unknown> {
-  status: RequestStatusEnum
-  fingerPrint?: string
-  response?: IdempotencyResponse<BodyType, ErrorType>
+  status: RequestStatusEnum;
+  fingerPrint?: string;
+  response?: IdempotencyResponse<BodyType, ErrorType>;
 }
 
 export interface IdempotencyResponse<BodyType = unknown, ErrorType = unknown> {
-  body?: BodyType
-  additional?: Record<string, unknown>
-  error?: ErrorType
+  body?: BodyType;
+  additional?: Record<string, unknown>;
+  error?: ErrorType;
 }

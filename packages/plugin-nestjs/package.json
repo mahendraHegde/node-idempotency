@@ -6,7 +6,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "test:e2e": "jest --config ./tests/jest-e2e.json --runInBand --forceExit",
-    "build": "tsc",
+    "build": "tsc -p ./tsconfig.build.json",
     "typecheck": "tsc -b"
   },
   "keywords": [
