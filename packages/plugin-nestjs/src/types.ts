@@ -1,7 +1,3 @@
-export enum StorageAdapterEnum {
-  memory = "memory",
-}
-
 export interface SerializedAPIException {
   message: string;
   name?: string;

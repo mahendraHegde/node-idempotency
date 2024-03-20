@@ -1,4 +1,4 @@
-#### Node-Idempotency/nestjs
+#### @node-idempotency/nestjs
 
 Nestjs wrapper for Node-Idempotency.
 Implements `@node-idempotency/core` as a nestjs interceptor.

@@ -15,20 +15,20 @@ import {
   type IdempotencyParams,
   type IdempotencyResponse,
   IdempotencyOptions,
+  idempotencyErrorCodes,
 } from "@node-idempotency/core";
+import {
+  idempotency2HttpCodeMap,
+  headers2Cache,
+  HTTPHeaderEnum,
+} from "@node-idempotency/shared";
 
 import { type FastifyReply, type FastifyRequest } from "fastify";
 import { type Response, type Request } from "express";
 
 import { type Observable, of, throwError, map, catchError } from "rxjs";
 import { Reflector } from "@nestjs/core";
-import {
-  IDEMPOTENCY_OPTIONS,
-  IDEMPOTENCY_REPLAYED_HEADER,
-  IDEMPOTENCY_STORAGE,
-  headers2Cache,
-  idempotency2HttpCodeMap,
-} from "../constants";
+import { IDEMPOTENCY_OPTIONS, IDEMPOTENCY_STORAGE } from "../constants";
 import { Stream } from "stream";
 import { type SerializedAPIException } from "../types";
 
@@ -52,6 +52,10 @@ export class NodeIdempotencyInterceptor implements NestInterceptor {
     const request = context
       .switchToHttp()
       .getRequest<FastifyRequest | Request>();
+    const response = context
+      .switchToHttp()
+      .getResponse<FastifyReply | Response>();
+
     const options =
       this.reflector.get(IDEMPOTENCY_OPTIONS, context.getHandler()) ??
       this.reflector.get(IDEMPOTENCY_OPTIONS, context.getClass());
@@ -62,6 +66,7 @@ export class NodeIdempotencyInterceptor implements NestInterceptor {
       method: request.method,
       options,
     };
+
     try {
       const idempotencyResponse: IdempotencyResponse | undefined =
         await this.nodeIdempotency.onRequest<unknown, SerializedAPIException>(
@@ -71,9 +76,6 @@ export class NodeIdempotencyInterceptor implements NestInterceptor {
         return await this.handleNewRequest(idempotencyReq, context, next);
       }
       // this is a duplicate request
-      const response = context
-        .switchToHttp()
-        .getResponse<FastifyReply | Response>();
       if (idempotencyResponse.additional?.statusCode) {
         const { statusCode } = idempotencyResponse.additional;
         if ("code" in response && typeof response.code === "function") {
@@ -94,7 +96,7 @@ export class NodeIdempotencyInterceptor implements NestInterceptor {
       }, {});
       this.setHeaders(response, {
         ...headers,
-        [IDEMPOTENCY_REPLAYED_HEADER]: "true",
+        [HTTPHeaderEnum.idempotentReplayed]: "true",
       });
       if (typeof idempotencyResponse.body !== "undefined") {
         return of(idempotencyResponse.body);
@@ -106,7 +108,12 @@ export class NodeIdempotencyInterceptor implements NestInterceptor {
       if (err instanceof IdempotencyError) {
         const status =
           idempotency2HttpCodeMap[err.code] || HttpStatus.INTERNAL_SERVER_ERROR;
-        return throwError(() => new HttpException(err.message, status));
+        if (err.code === idempotencyErrorCodes.REQUEST_IN_PROGRESS) {
+          this.setHeaders(response, { [HTTPHeaderEnum.retryAfter]: "1" });
+        }
+        return throwError(
+          () => new HttpException(err.message, status as HttpStatus),
+        );
       }
       if (err instanceof HttpException) {
         return throwError(() => err);
