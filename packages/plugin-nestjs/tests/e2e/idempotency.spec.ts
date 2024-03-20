@@ -2,12 +2,13 @@
 import { type INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { FastifyAdapter } from "@nestjs/platform-fastify";
+import { HTTPHeaderEnum } from "@node-idempotency/shared";
 
 import * as request from "supertest";
 import { TestModule } from "./modules/test/test.module";
-import { IDEMPOTENCY_REPLAYED_HEADER } from "../../src/constants";
 import { type Server } from "net";
 const idempotencyKey = "Idempotency-Key";
+const IDEMPOTENCY_REPLAYED_HEADER = HTTPHeaderEnum.idempotentReplayed;
 
 describe("Node-Idempotency", () => {
   ["fastify", "express"].forEach((adapter) => {
@@ -120,6 +121,8 @@ describe("Node-Idempotency", () => {
         const conflict = res1.status !== 200 ? res1.status : res2.status;
         const successBody = res1.status === 200 ? res1.text : res2.text;
         const conflictBody = res1.status !== 200 ? res1.body : res2.body;
+        const conflictHeader =
+          res1.status !== 200 ? res1.headers : res2.headers;
         expect(success).not.toBe(conflict);
         expect(success).toBe(200);
         expect(conflict).toBe(409);
@@ -128,6 +131,9 @@ describe("Node-Idempotency", () => {
           message: "A request is outstanding for this Idempotency-Key",
           statusCode: 409,
         });
+        expect(conflictHeader[HTTPHeaderEnum.retryAfter.toLowerCase()]).toEqual(
+          "1",
+        );
       });
 
       it("should return error when different body is used for the same key", async () => {
