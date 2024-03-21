@@ -1,27 +1,27 @@
 import * as request from "supertest";
-import server from "./modules/test/test.module";
+import type * as express from "express";
+import createServer from "./modules/test/test.module";
 import { HTTPHeaderEnum } from "@node-idempotency/shared";
 const idempotencyKey = "Idempotency-Key";
 // const server = fastifyInstance as unknown as Server
 const IDEMPOTENCY_REPLAYED_HEADER = HTTPHeaderEnum.idempotentReplayed;
 
 describe("Node-Idempotency", () => {
+  let app: express.Application;
   beforeAll(async () => {
-    await server.ready();
-  });
-  afterAll(async () => {
-    await server.close();
+    app = await createServer();
   });
 
   it("should return a cached response when key is reused", async () => {
-    const res1 = await request(server.server)
+    const res1 = await request(app)
       .get("/")
       .set({ [idempotencyKey]: "1" })
-      .expect(200, "0");
-    const res2 = await request(server.server)
+      .expect(200, "1");
+
+    const res2 = await request(app)
       .get("/")
       .set({ [idempotencyKey]: "1" })
-      .expect(200, "0");
+      .expect(200, "1");
     expect(
       res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
     ).toBeUndefined();
@@ -31,14 +31,14 @@ describe("Node-Idempotency", () => {
   });
 
   it("should return a cached response when key is reused for json endpoint", async () => {
-    const res1 = await request(server.server)
+    const res1 = await request(app)
       .get("/json")
       .set({ [idempotencyKey]: "1" })
-      .expect(200, { jsonCounter: 1 });
-    const res2 = await request(server.server)
+      .expect(200, { counter: 1 });
+    const res2 = await request(app)
       .get("/json")
       .set({ [idempotencyKey]: "1" })
-      .expect(200, { jsonCounter: 1 });
+      .expect(200, { counter: 1 });
     expect(
       res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
     ).toBeUndefined();
@@ -48,13 +48,13 @@ describe("Node-Idempotency", () => {
   });
 
   it("should return a cached response when key is reused with request body", async () => {
-    const res1 = await request(server.server)
+    const res1 = await request(app)
       .post("/")
       .set({ [idempotencyKey]: "4" })
       .send({ number: 2 })
       .expect(201, "2");
 
-    const res2 = await request(server.server)
+    const res2 = await request(app)
       .post("/")
       .set({ [idempotencyKey]: "4" })
       .send({ number: 2 })
@@ -69,23 +69,15 @@ describe("Node-Idempotency", () => {
   });
 
   it("should return a cached error when key is reused", async () => {
-    const res1 = await request(server.server)
+    const res1 = await request(app)
       .get("/error")
       .set({ [idempotencyKey]: "5" })
-      .expect(500, {
-        statusCode: 500,
-        error: "Internal Server Error",
-        message: "unknown",
-      });
+      .expect(500, { message: "unknown" });
 
-    const res2 = await request(server.server)
+    const res2 = await request(app)
       .get("/error")
       .set({ [idempotencyKey]: "5" })
-      .expect(500, {
-        statusCode: 500,
-        error: "Internal Server Error",
-        message: "unknown",
-      });
+      .expect(500, { message: "unknown" });
 
     expect(
       res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
@@ -96,11 +88,11 @@ describe("Node-Idempotency", () => {
   });
 
   it("should return 400 when idempotency key is not sent when its needed", async () => {
-    await request(server.server).get("/").expect(400);
+    await request(app).get("/").expect(400);
   });
 
   it("should return 400 when idempotency key exceeds length", async () => {
-    await request(server.server)
+    await request(app)
       .get("/")
       .set({ [idempotencyKey]: "2345678" })
       .expect(400);
@@ -108,12 +100,12 @@ describe("Node-Idempotency", () => {
 
   it("should return a conflict when parallel requests are made", async () => {
     const [res1, res2] = await Promise.all([
-      request(server.server)
+      request(app)
         .get("/slow")
         .set({ [idempotencyKey]: "2" })
         .then((res) => res)
         .catch((err) => err),
-      request(server.server)
+      request(app)
         .get("/slow")
         .set({ [idempotencyKey]: "2" })
         .then((res) => res)
@@ -128,12 +120,10 @@ describe("Node-Idempotency", () => {
     expect(success).not.toBe(conflict);
     expect(success).toBe(200);
     expect(conflict).toBe(409);
-    expect(successBody).toEqual("0");
+    expect(successBody).toEqual("1");
     expect(conflictBody).toEqual({
       code: "REQUEST_IN_PROGRESS",
-      error: "Conflict",
       message: "A request is outstanding for this Idempotency-Key",
-      statusCode: 409,
     });
     expect(conflictHeader[HTTPHeaderEnum.retryAfter.toLowerCase()]).toEqual(
       "1",
@@ -141,22 +131,20 @@ describe("Node-Idempotency", () => {
   });
 
   it("should return error when different body is used for the same key", async () => {
-    const res1 = await request(server.server)
+    const res1 = await request(app)
       .post("/")
       .set({ [idempotencyKey]: "3" })
       .send({ number: 1 })
       .expect(201, "3");
 
-    const res2 = await request(server.server)
+    const res2 = await request(app)
       .post("/")
       .set({ [idempotencyKey]: "3" })
       .send({ number: 2 })
       .expect(422);
     expect(JSON.parse(res2.text)).toEqual({
       code: "IDEMPOTENCY_FINGERPRINT_MISSMATCH",
-      error: "Unprocessable Entity",
       message: "Idempotency-Key is already used",
-      statusCode: 422,
     });
     expect(
       res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],

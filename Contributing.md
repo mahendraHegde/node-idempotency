@@ -2,7 +2,7 @@
 
 1. Creating issues that you faced.
 2. Choosing an issue to fix and raising a PR.
-3. Cctualy using the product and providing feedback
+3. actualy using the product and providing feedback.
 
 #### Guidelines
 

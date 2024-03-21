@@ -8,8 +8,14 @@ export default (server: FastifyInstance): void => {
   let counter = 0;
   let slowCounter = 0;
   let adCounter = 0;
+  let jsonCounter = 0;
   server.get("/", () => {
     return counter++;
+  });
+
+  server.get("/json", () => {
+    jsonCounter++;
+    return { jsonCounter };
   });
 
   server.get("/slow", async (): Promise<number> => {
@@ -18,7 +24,7 @@ export default (server: FastifyInstance): void => {
   });
 
   server.get("/error", async () => {
-    throw new Error("unknow");
+    throw new Error("unknown");
   });
 
   server.post(

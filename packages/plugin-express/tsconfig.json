@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "module": "commonjs",
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "ES2021",
+    "allowJs": false,
+    "esModuleInterop": false,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "outDir": "dist/"
+  },
+  "include": ["src", "tests"],
+  "exclude": ["node_modules", "dist", "examples"]
+}
