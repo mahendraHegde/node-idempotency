@@ -1,5 +1,5 @@
 import * as request from "supertest";
-import * as express from "express";
+import type * as express from "express";
 import createServer from "./modules/test/test.module";
 import { HTTPHeaderEnum } from "@node-idempotency/shared";
 const idempotencyKey = "Idempotency-Key";
@@ -12,20 +12,38 @@ describe("Node-Idempotency", () => {
     app = await createServer();
   });
 
-  it.only("should return a cached response when key is reused", async () => {
+  it("should return a cached response when key is reused", async () => {
     const res1 = await request(app)
       .get("/")
       .set({ [idempotencyKey]: "1" })
-      .expect(200, "0");
+      .expect(200, "1");
+
     const res2 = await request(app)
       .get("/")
       .set({ [idempotencyKey]: "1" })
-      .expect(200, "0");
+      .expect(200, "1");
     expect(
-      res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()]
+      res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
     ).toBeUndefined();
     expect(res2.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()]).toEqual(
-      "true"
+      "true",
+    );
+  });
+
+  it("should return a cached response when key is reused for json endpoint", async () => {
+    const res1 = await request(app)
+      .get("/json")
+      .set({ [idempotencyKey]: "1" })
+      .expect(200, { counter: 1 });
+    const res2 = await request(app)
+      .get("/json")
+      .set({ [idempotencyKey]: "1" })
+      .expect(200, { counter: 1 });
+    expect(
+      res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
+    ).toBeUndefined();
+    expect(res2.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()]).toEqual(
+      "true",
     );
   });
 
@@ -43,10 +61,10 @@ describe("Node-Idempotency", () => {
       .expect(201, "2");
 
     expect(
-      res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()]
+      res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
     ).toBeUndefined();
     expect(res2.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()]).toEqual(
-      "true"
+      "true",
     );
   });
 
@@ -54,26 +72,18 @@ describe("Node-Idempotency", () => {
     const res1 = await request(app)
       .get("/error")
       .set({ [idempotencyKey]: "5" })
-      .expect(500, {
-        statusCode: 500,
-        error: "Internal Server Error",
-        message: "unknow",
-      });
+      .expect(500, { message: "unknown" });
 
     const res2 = await request(app)
       .get("/error")
       .set({ [idempotencyKey]: "5" })
-      .expect(500, {
-        statusCode: 500,
-        error: "Internal Server Error",
-        message: "unknow",
-      });
+      .expect(500, { message: "unknown" });
 
     expect(
-      res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()]
+      res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
     ).toBeUndefined();
     expect(res2.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()]).toEqual(
-      "true"
+      "true",
     );
   });
 
@@ -110,15 +120,13 @@ describe("Node-Idempotency", () => {
     expect(success).not.toBe(conflict);
     expect(success).toBe(200);
     expect(conflict).toBe(409);
-    expect(successBody).toEqual("0");
+    expect(successBody).toEqual("1");
     expect(conflictBody).toEqual({
       code: "REQUEST_IN_PROGRESS",
-      error: "Conflict",
       message: "A request is outstanding for this Idempotency-Key",
-      statusCode: 409,
     });
     expect(conflictHeader[HTTPHeaderEnum.retryAfter.toLowerCase()]).toEqual(
-      "1"
+      "1",
     );
   });
 
@@ -134,17 +142,15 @@ describe("Node-Idempotency", () => {
       .set({ [idempotencyKey]: "3" })
       .send({ number: 2 })
       .expect(422);
-    expect(JSON.parse(res2.text as string)).toEqual({
+    expect(JSON.parse(res2.text)).toEqual({
       code: "IDEMPOTENCY_FINGERPRINT_MISSMATCH",
-      error: "Unprocessable Entity",
       message: "Idempotency-Key is already used",
-      statusCode: 422,
     });
     expect(
-      res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()]
+      res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
     ).toBeUndefined();
     expect(
-      res2.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()]
+      res2.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
     ).toBeUndefined();
   });
 });

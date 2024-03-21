@@ -1,4 +1,4 @@
-import * as express from "express";
+import type * as express from "express";
 
 import {
   type IdempotencyPluginOptions,
@@ -14,10 +14,10 @@ import {
   type IdempotencyResponse,
   idempotencyErrorCodes,
 } from "@node-idempotency/core";
-import { ExpressMiddleware } from "./types";
+import { type ExpressMiddleware } from "./types";
 
 const getIdempotencyInstance = async (
-  options: IdempotencyPluginOptions
+  options: IdempotencyPluginOptions,
 ): Promise<Idempotency> => {
   const storageAdapter = await buildStorageAdapter(options.storageAdapter);
   return new Idempotency(storageAdapter, options);
@@ -25,7 +25,7 @@ const getIdempotencyInstance = async (
 
 const setHeaders = (
   response: express.Response,
-  headers: Record<string, string>
+  headers: Record<string, string>,
 ): void => {
   Object.keys(headers).forEach((key) => {
     if (headers[key]) {
@@ -38,16 +38,28 @@ const handleResponse = async (
   idempotencyReq: IdempotencyParams,
   nodeIdempotency: Idempotency,
   response: express.Response,
-  payload?:Record<string,unknown>
+  payload?: string | Record<string, unknown>,
 ): Promise<void> => {
   const { statusCode } = response;
+  const headers = response.getHeaders();
   const additional = { statusCode };
   Object.values(headers2Cache).forEach((header) => {
-    const head = response.getHeader(header);
+    const head = headers[header] ?? headers[header.toLowerCase()];
     if (head) {
       additional[header] = head;
     }
   });
+  try {
+    const isJson = (headers["content-type"] ?? headers["Content-Type"])
+      ?.toString()
+      ?.toLowerCase()
+      ?.includes("application/json");
+    if (isJson && typeof payload === "string") {
+      payload = JSON.parse(payload);
+    }
+  } catch {
+    // ignore the error
+  }
   const res: IdempotencyResponse = {
     additional,
     ...(statusCode < 400 ? { body: payload } : { error: payload }),
@@ -55,11 +67,11 @@ const handleResponse = async (
   await nodeIdempotency.onResponse(idempotencyReq, res);
 };
 
-const middlewareWrapper = (nodeIdempotency: Idempotency): ExpressMiddleware => {
+const successHandler = (nodeIdempotency: Idempotency): ExpressMiddleware => {
   return async (
     request: express.Request,
     response: express.Response,
-    next: express.NextFunction
+    next: express.NextFunction,
   ): Promise<void> => {
     const idempotencyReq: IdempotencyParams = {
       headers: request.headers,
@@ -71,13 +83,18 @@ const middlewareWrapper = (nodeIdempotency: Idempotency): ExpressMiddleware => {
       const idempotencyResponse: IdempotencyResponse | undefined =
         await nodeIdempotency.onRequest<unknown, Error>(idempotencyReq);
       if (!idempotencyResponse) {
-        // fist time request, cache the response
-        const originalSend = response.send.bind(response);
-        response.send = (body?: any): express.Response => {
-          void handleResponse(idempotencyReq, nodeIdempotency, response,body);
-          originalSend(body, response);
-          return response;
+        // fist time request, itercept and cache the response
+        const originalSend: express.Send = response.send.bind(response);
+        response.send = function (body?: any): express.Response {
+          void handleResponse(
+            idempotencyReq,
+            nodeIdempotency,
+            response,
+            body as string,
+          );
+          return originalSend(body);
         };
+        next();
         return;
       }
       // this is a duplicate request
@@ -99,7 +116,6 @@ const middlewareWrapper = (nodeIdempotency: Idempotency): ExpressMiddleware => {
       });
       if (idempotencyResponse.body) {
         response.send(idempotencyResponse.body);
-        next();
       } else {
         next(idempotencyResponse.error);
       }
@@ -117,8 +133,8 @@ const middlewareWrapper = (nodeIdempotency: Idempotency): ExpressMiddleware => {
 };
 
 export const idempotencyAsMiddleware = async (
-  options: IdempotencyPluginOptions
-): Promise<ExpressMiddleware> => {
+  options: IdempotencyPluginOptions,
+): Promise<ExpressMiddleware[]> => {
   const idempotency = await getIdempotencyInstance(options);
-  return middlewareWrapper(idempotency);
+  return [successHandler(idempotency)];
 };

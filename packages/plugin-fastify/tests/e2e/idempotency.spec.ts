@@ -30,6 +30,23 @@ describe("Node-Idempotency", () => {
     );
   });
 
+  it("should return a cached response when key is reused for json endpoint", async () => {
+    const res1 = await request(server.server)
+      .get("/json")
+      .set({ [idempotencyKey]: "1" })
+      .expect(200, { jsonCounter: 1 });
+    const res2 = await request(server.server)
+      .get("/json")
+      .set({ [idempotencyKey]: "1" })
+      .expect(200, { jsonCounter: 1 });
+    expect(
+      res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
+    ).toBeUndefined();
+    expect(res2.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()]).toEqual(
+      "true",
+    );
+  });
+
   it("should return a cached response when key is reused with request body", async () => {
     const res1 = await request(server.server)
       .post("/")
@@ -58,7 +75,7 @@ describe("Node-Idempotency", () => {
       .expect(500, {
         statusCode: 500,
         error: "Internal Server Error",
-        message: "unknow",
+        message: "unknown",
       });
 
     const res2 = await request(server.server)
@@ -67,7 +84,7 @@ describe("Node-Idempotency", () => {
       .expect(500, {
         statusCode: 500,
         error: "Internal Server Error",
-        message: "unknow",
+        message: "unknown",
       });
 
     expect(
@@ -135,7 +152,7 @@ describe("Node-Idempotency", () => {
       .set({ [idempotencyKey]: "3" })
       .send({ number: 2 })
       .expect(422);
-    expect(JSON.parse(res2.text as string)).toEqual({
+    expect(JSON.parse(res2.text)).toEqual({
       code: "IDEMPOTENCY_FINGERPRINT_MISSMATCH",
       error: "Unprocessable Entity",
       message: "Idempotency-Key is already used",

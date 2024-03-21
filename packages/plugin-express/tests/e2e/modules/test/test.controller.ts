@@ -1,31 +1,39 @@
-import * as express from "express";
+import type * as express from "express";
 
 export default (app: express.Application): void => {
   let counter = 0;
   let slowCounter = 0;
   let adCounter = 0;
-  app.get("/", (_,res) => {
-     res.send(counter++)
+  let jsonCounter = 0;
+  app.get("/", (_, res): void => {
+    counter++;
+    res.send(`${counter}`);
   });
 
-  app.get("/slow", async (): Promise<number> => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return slowCounter++;
+  app.get("/json", (_, res): void => {
+    jsonCounter++;
+    res.json({ counter: jsonCounter });
   });
 
-  app.get("/error", async () => {
-    throw new Error("unknow");
+  app.get("/slow", (_, res): void => {
+    setTimeout(() => {
+      slowCounter++;
+      res.send(`${slowCounter}`);
+    }, 500);
+  });
+
+  app.get("/error", (_, __, next) => {
+    next(new Error("unknown"));
   });
 
   app.post(
     "/",
-    async (
+    (
       req: express.Request<{ Body: { number: number } }>,
       response: express.Response,
-    ): Promise<number> => {
+    ): void => {
       adCounter += req.body.number;
-      void response.status(201);
-      return adCounter;
+      response.status(201).send(`${adCounter}`);
     },
   );
 };

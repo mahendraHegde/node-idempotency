@@ -12,22 +12,20 @@ npm i @node-idempotency/express
 ##### usage
 
 ```ts
-import fastify from "fastify";
-import fp from "fastify-plugin";
-import {
-  idempotencyAsPlugin,
-  type IdempotencyPluginOptions,
-  StorageAdapterEnum,
-} from "@node-idempotency/fastify";
+import * as express from "express";
 
-const server = fastify();
-server.register(fp<IdempotencyPluginOptions>(idempotencyAsPlugin), {
-  storageAdapter: StorageAdapterEnum.memory,
-  //...IdempotencyOptions
-});
+//server.ts
+export default async (): Promise<express.Application> => {
+  const app = express();
+  const middleware = await idempotencyAsMiddleware({
+    storageAdapter: StorageAdapterEnum.memory,
+  });
+  app.use(middleware);
+  //register routes here
+  app.use(errorHandler); //your custom error handler
 
-//...your rest of logic
-export default server;
+  return app;
+};
 ```
 
 - `storageAdapter` can either be `memory`, `redis` or an instance of [`Storage`](../storage/Readme.md) interface
