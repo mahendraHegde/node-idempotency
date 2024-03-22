@@ -1,34 +1,34 @@
 export interface IdempotencyOptions {
   /**
    * @defaultValue `idempotency-key`
-   * 
+   *
    * specifies the header key to look for to get idempotency key
    * case insensitive
    */
   idempotencyKey?: string;
   /**
    * @defaultValue `256`
-   * 
+   *
    * restricts max length of idempotency key
    */
   keyMaxLength?: number;
   /**
    * @defaultValue `node-idempotency`
-   * 
+   *
    * prefix/namespace for cache key
    */
   cacheKeyPrefix?: string;
   /**
    * @defaultValue `1000 * 60 * 60 * 24(1 day)`
-   * 
+   *
    * ttl for idempotency
    */
-  cacheTTLMS?: number;  
+  cacheTTLMS?: number;
   /**
-  * @defaultValue `false`
-  * 
-  * if set to `true` requests without idempotency key header will be rejected
-  */
+   * @defaultValue `false`
+   *
+   * if set to `true` requests without idempotency key header will be rejected
+   */
   enforceIdempotency?: boolean;
 }
 export interface IdempotencyParams {

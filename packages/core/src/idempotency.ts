@@ -19,7 +19,7 @@ export class Idempotency {
   options: Required<IdempotencyOptions>;
   constructor(
     private readonly storage: StorageAdapter,
-    options?: IdempotencyOptions
+    options?: IdempotencyOptions,
   ) {
     this.options = {
       cacheKeyPrefix: IDEMPOTENCY_CACHE_KEY_PREFIX,
@@ -32,7 +32,7 @@ export class Idempotency {
   }
 
   private buildRequestOptions(
-    options?: IdempotencyOptions
+    options?: IdempotencyOptions,
   ): Required<IdempotencyOptions> {
     const enforceIdempotency =
       options?.enforceIdempotency !== undefined
@@ -42,7 +42,7 @@ export class Idempotency {
   }
 
   private getInternalRequest(
-    req: IdempotencyParams
+    req: IdempotencyParams,
   ): IdempotencyParamsInternal {
     return {
       ...req,
@@ -51,10 +51,10 @@ export class Idempotency {
   }
 
   private getIdempotencyKey(
-    req: IdempotencyParamsInternal
+    req: IdempotencyParamsInternal,
   ): string | undefined {
     const key = Object.keys(req.headers).find(
-      (key) => key.toLowerCase() === req.options.idempotencyKey.toLowerCase()
+      (key) => key.toLowerCase() === req.options.idempotencyKey.toLowerCase(),
     );
     return key ? (req.headers[key] as string) : undefined;
   }
@@ -65,7 +65,7 @@ export class Idempotency {
       if (req.options?.enforceIdempotency) {
         throw new IdempotencyError(
           "Idempotency-Key is missing",
-          IdempotencyErrorCodes.IDEMPOTENCY_KEY_LEN_EXEEDED
+          IdempotencyErrorCodes.IDEMPOTENCY_KEY_LEN_EXEEDED,
         );
       }
       return false;
@@ -78,7 +78,7 @@ export class Idempotency {
     if (idempotencyKey && idempotencyKey.length > req.options.keyMaxLength) {
       throw new IdempotencyError(
         "Idempotency-Key length exceeds max allowed length",
-        IdempotencyErrorCodes.IDEMPOTENCY_KEY_LEN_EXEEDED
+        IdempotencyErrorCodes.IDEMPOTENCY_KEY_LEN_EXEEDED,
       );
     }
   }
@@ -102,11 +102,11 @@ export class Idempotency {
 
   /**
    * @throws {@link IdempotencyError} if `request is already in progress or invalid`
-   * 
+   *
    * to be called on receiving the request, if the key is already cached, returns or throws based on the status, if returns nothing
    */
   async onRequest<BodyType, ErrorType>(
-    req: IdempotencyParams
+    req: IdempotencyParams,
   ): Promise<IdempotencyResponse<BodyType, ErrorType> | undefined> {
     const reqInternal: IdempotencyParamsInternal = this.getInternalRequest(req);
     if (this.isEnabled(reqInternal)) {
@@ -120,7 +120,7 @@ export class Idempotency {
       const isNew = await this.storage.setIfNotExists(
         cacheKey,
         JSON.stringify(payload),
-        { ttl: reqInternal.options.cacheTTLMS }
+        { ttl: reqInternal.options.cacheTTLMS },
       );
       if (!isNew) {
         const cached = await this.storage.get(cacheKey);
@@ -131,13 +131,13 @@ export class Idempotency {
         if (data.status === RequestStatusEnum.IN_PROGRESS) {
           throw new IdempotencyError(
             "A request is outstanding for this Idempotency-Key",
-            IdempotencyErrorCodes.REQUEST_IN_PROGRESS
+            IdempotencyErrorCodes.REQUEST_IN_PROGRESS,
           );
         } else {
           if (fingerPrint !== data.fingerPrint) {
             throw new IdempotencyError(
               "Idempotency-Key is already used",
-              IdempotencyErrorCodes.IDEMPOTENCY_FINGERPRINT_MISSMATCH
+              IdempotencyErrorCodes.IDEMPOTENCY_FINGERPRINT_MISSMATCH,
             );
           }
           return data.response;
@@ -152,7 +152,7 @@ export class Idempotency {
    */
   async onResponse<BodyType, ErrorType>(
     req: IdempotencyParams,
-    res: IdempotencyResponse<BodyType, ErrorType>
+    res: IdempotencyResponse<BodyType, ErrorType>,
   ): Promise<void> {
     const reqInternal = this.getInternalRequest(req);
     if (this.isEnabled(reqInternal)) {

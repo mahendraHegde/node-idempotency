@@ -4,9 +4,9 @@
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `BodyType` | `unknown` |
+| Name        | Type      |
+| :---------- | :-------- |
+| `BodyType`  | `unknown` |
 | `ErrorType` | `unknown` |
 
 ## Table of contents
@@ -27,7 +27,7 @@
 
 [packages/core/src/types.ts:67](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/types.ts#L67)
 
-___
+---
 
 ### body
 
@@ -37,7 +37,7 @@ ___
 
 [packages/core/src/types.ts:66](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/types.ts#L66)
 
-___
+---
 
 ### error
 

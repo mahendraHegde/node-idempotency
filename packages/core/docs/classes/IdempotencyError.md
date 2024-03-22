@@ -36,11 +36,11 @@
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `message` | `string` |
-| `code` | [`IdempotencyErrorCodes`](../enums/IdempotencyErrorCodes.md) |
-| `meta?` | `Record`\<`string`, `unknown`\> |
+| Name      | Type                                                         |
+| :-------- | :----------------------------------------------------------- |
+| `message` | `string`                                                     |
+| `code`    | [`IdempotencyErrorCodes`](../enums/IdempotencyErrorCodes.md) |
+| `meta?`   | `Record`\<`string`, `unknown`\>                              |
 
 #### Returns
 
@@ -64,7 +64,7 @@ Error.constructor
 
 [packages/core/src/error.ts:9](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/error.ts#L9)
 
-___
+---
 
 ### message
 
@@ -78,7 +78,7 @@ Error.message
 
 node_modules/.pnpm/typescript@5.4.2/node_modules/typescript/lib/lib.es5.d.ts:1077
 
-___
+---
 
 ### meta
 
@@ -88,7 +88,7 @@ ___
 
 [packages/core/src/error.ts:10](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/error.ts#L10)
 
-___
+---
 
 ### name
 
@@ -102,7 +102,7 @@ Error.name
 
 node_modules/.pnpm/typescript@5.4.2/node_modules/typescript/lib/lib.es5.d.ts:1076
 
-___
+---
 
 ### stack
 
@@ -116,7 +116,7 @@ Error.stack
 
 node_modules/.pnpm/typescript@5.4.2/node_modules/typescript/lib/lib.es5.d.ts:1078
 
-___
+---
 
 ### prepareStackTrace
 
@@ -134,9 +134,9 @@ https://v8.dev/docs/stack-trace-api#customizing-stack-traces
 
 ##### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `err` | `Error` |
+| Name          | Type         |
+| :------------ | :----------- |
+| `err`         | `Error`      |
 | `stackTraces` | `CallSite`[] |
 
 ##### Returns
@@ -151,7 +151,7 @@ Error.prepareStackTrace
 
 node_modules/.pnpm/@types+node@20.11.28/node_modules/@types/node/globals.d.ts:28
 
-___
+---
 
 ### stackTraceLimit
 
@@ -175,9 +175,9 @@ Create .stack property on a target object
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `targetObject` | `object` |
+| Name              | Type       |
+| :---------------- | :--------- |
+| `targetObject`    | `object`   |
 | `constructorOpt?` | `Function` |
 
 #### Returns

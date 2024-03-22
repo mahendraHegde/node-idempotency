@@ -25,9 +25,9 @@
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `storage` | `StorageAdapter` |
+| Name       | Type                                                        |
+| :--------- | :---------------------------------------------------------- |
+| `storage`  | `StorageAdapter`                                            |
 | `options?` | [`IdempotencyOptions`](../interfaces/IdempotencyOptions.md) |
 
 #### Returns
@@ -56,15 +56,15 @@
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `BodyType` |
+| Name        |
+| :---------- |
+| `BodyType`  |
 | `ErrorType` |
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name  | Type                                                      |
+| :---- | :-------------------------------------------------------- |
 | `req` | [`IdempotencyParams`](../interfaces/IdempotencyParams.md) |
 
 #### Returns
@@ -81,7 +81,7 @@ to be called on receiving the request, if the key is already cached, returns or 
 
 [packages/core/src/idempotency.ts:108](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/idempotency.ts#L108)
 
-___
+---
 
 ### onResponse
 
@@ -92,16 +92,16 @@ subsequent requests can use cached response.
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `BodyType` |
+| Name        |
+| :---------- |
+| `BodyType`  |
 | `ErrorType` |
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `req` | [`IdempotencyParams`](../interfaces/IdempotencyParams.md) |
+| Name  | Type                                                                                     |
+| :---- | :--------------------------------------------------------------------------------------- |
+| `req` | [`IdempotencyParams`](../interfaces/IdempotencyParams.md)                                |
 | `res` | [`IdempotencyResponse`](../interfaces/IdempotencyResponse.md)\<`BodyType`, `ErrorType`\> |
 
 #### Returns

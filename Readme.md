@@ -1,9 +1,10 @@
 <h3> Node-Idempotency </h3>
 <i>Make requests idempotent on nodejs.</i>
 
-
 #### @node-idempotency/core
+
 Core package that, makes requests idempotent and powers
+
 - [`@node-idempotency/nestjs`](packages/plugin-nestjs/Readme.md) - Plug and Play `nestjs` wrapper for `@node-idempotency/core`
 
 - [`@node-idempotency/express`](packages/plugin-express/Readme.md) - Plug and Play `express` middleware for `@node-idempotency/core`
@@ -13,17 +14,20 @@ Core package that, makes requests idempotent and powers
 if above packages dont meet your needs, you can utilise the core package directly to tweek it as per your needs.
 
 ##### install
+
 ```bash
 npm i @node-idempotency/core
 ```
+
 ##### usage
 
 The flow for idempotency is simple, you call the `onRequest` handler, when you receieve the request from clients before it reaches your business logic/controller.
+
 `onRequest` handler validates request for conflicts, figerprint missmatch, no idempotency-key(when idempotency is enforced) and gives back the response if the key is already seen, you typically give back the "cached" response to the client.
+
 if its a new request, it marks the request as progress generates fingerprint using `body` (so that it can validate conflicts for duplicate requests and figure out fingerprint missmatch), and returns undefined, you are responsible here to pass the request to your controller/business logic.
 
 `onResponse` handler is called by you when your business logic completes for the first time, so that the response can be stored and the request can be marked as complete.
-
 
 ```ts
 import { Idempotency } from '@node-idempotency/core'
@@ -68,8 +72,8 @@ try {
   });
 
 ```
-check details about the api [here](./packages/core/docs/classes/Idempotency.md)
 
+check details about the api [here](./packages/core/docs/classes/Idempotency.md)
 
 <br/>
 <hr/>

@@ -22,7 +22,7 @@
 
 [packages/core/src/types.ts:37](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/types.ts#L37)
 
-___
+---
 
 ### headers
 
@@ -32,7 +32,7 @@ ___
 
 [packages/core/src/types.ts:35](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/types.ts#L35)
 
-___
+---
 
 ### method
 
@@ -42,7 +42,7 @@ ___
 
 [packages/core/src/types.ts:38](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/types.ts#L38)
 
-___
+---
 
 ### options
 
@@ -52,7 +52,7 @@ ___
 
 [packages/core/src/types.ts:39](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/types.ts#L39)
 
-___
+---
 
 ### path
 
