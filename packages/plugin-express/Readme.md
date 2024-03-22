@@ -29,4 +29,4 @@ export default async (): Promise<express.Application> => {
 ```
 
 - `storageAdapter` can either be `memory`, `redis` or an instance of [`Storage`](../storage/Readme.md) interface
-- `idempotencyOptions` are the [`IdempotencyOptions`](../core/Readme.md) passed to `@node-idempotency/core/Idempotency`
+- `idempotencyOptions` are the [`IdempotencyOptions`](../core/docs/interfaces/IdempotencyOptions.md) passed to `@node-idempotency/core/Idempotency`

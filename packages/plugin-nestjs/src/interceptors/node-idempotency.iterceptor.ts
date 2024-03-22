@@ -15,7 +15,7 @@ import {
   type IdempotencyParams,
   type IdempotencyResponse,
   IdempotencyOptions,
-  idempotencyErrorCodes,
+  IdempotencyErrorCodes,
 } from "@node-idempotency/core";
 import {
   idempotency2HttpCodeMap,
@@ -108,7 +108,7 @@ export class NodeIdempotencyInterceptor implements NestInterceptor {
       if (err instanceof IdempotencyError) {
         const status =
           idempotency2HttpCodeMap[err.code] || HttpStatus.INTERNAL_SERVER_ERROR;
-        if (err.code === idempotencyErrorCodes.REQUEST_IN_PROGRESS) {
+        if (err.code === IdempotencyErrorCodes.REQUEST_IN_PROGRESS) {
           this.setHeaders(response, { [HTTPHeaderEnum.retryAfter]: "1" });
         }
         return throwError(

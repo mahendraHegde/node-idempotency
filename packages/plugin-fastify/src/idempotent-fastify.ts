@@ -15,7 +15,7 @@ import {
   IdempotencyError,
   type IdempotencyParams,
   type IdempotencyResponse,
-  idempotencyErrorCodes,
+  IdempotencyErrorCodes,
 } from "@node-idempotency/core";
 
 const getIdempotencyInstance = async (
@@ -106,7 +106,7 @@ const onRequest = async (
   } catch (err) {
     if (err instanceof IdempotencyError) {
       const status = idempotency2HttpCodeMap[err.code] || 500;
-      if (err.code === idempotencyErrorCodes.REQUEST_IN_PROGRESS) {
+      if (err.code === IdempotencyErrorCodes.REQUEST_IN_PROGRESS) {
         setHeaders(reply, { [HTTPHeaderEnum.retryAfter]: "1" });
       }
       return await reply.status(status).send(err);

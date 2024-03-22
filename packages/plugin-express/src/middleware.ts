@@ -12,12 +12,12 @@ import {
   IdempotencyError,
   type IdempotencyParams,
   type IdempotencyResponse,
-  idempotencyErrorCodes,
+  IdempotencyErrorCodes,
 } from "@node-idempotency/core";
 import { type ExpressMiddleware } from "./types";
 
 const getIdempotencyInstance = async (
-  options: IdempotencyPluginOptions,
+  options: IdempotencyPluginOptions
 ): Promise<Idempotency> => {
   const storageAdapter = await buildStorageAdapter(options.storageAdapter);
   return new Idempotency(storageAdapter, options);
@@ -25,7 +25,7 @@ const getIdempotencyInstance = async (
 
 const setHeaders = (
   response: express.Response,
-  headers: Record<string, string>,
+  headers: Record<string, string>
 ): void => {
   Object.keys(headers).forEach((key) => {
     if (headers[key]) {
@@ -38,7 +38,7 @@ const handleResponse = async (
   idempotencyReq: IdempotencyParams,
   nodeIdempotency: Idempotency,
   response: express.Response,
-  payload?: string | Record<string, unknown>,
+  payload?: string | Record<string, unknown>
 ): Promise<void> => {
   const { statusCode } = response;
   const headers = response.getHeaders();
@@ -71,7 +71,7 @@ const successHandler = (nodeIdempotency: Idempotency): ExpressMiddleware => {
   return async (
     request: express.Request,
     response: express.Response,
-    next: express.NextFunction,
+    next: express.NextFunction
   ): Promise<void> => {
     const idempotencyReq: IdempotencyParams = {
       headers: request.headers,
@@ -90,7 +90,7 @@ const successHandler = (nodeIdempotency: Idempotency): ExpressMiddleware => {
             idempotencyReq,
             nodeIdempotency,
             response,
-            body as string,
+            body as string
           );
           return originalSend(body);
         };
@@ -122,7 +122,7 @@ const successHandler = (nodeIdempotency: Idempotency): ExpressMiddleware => {
     } catch (err) {
       if (err instanceof IdempotencyError) {
         const status = idempotency2HttpCodeMap[err.code] || 500;
-        if (err.code === idempotencyErrorCodes.REQUEST_IN_PROGRESS) {
+        if (err.code === IdempotencyErrorCodes.REQUEST_IN_PROGRESS) {
           setHeaders(response, { [HTTPHeaderEnum.retryAfter]: "1" });
         }
         void response.status(status);
@@ -133,7 +133,7 @@ const successHandler = (nodeIdempotency: Idempotency): ExpressMiddleware => {
 };
 
 export const idempotencyAsMiddleware = async (
-  options: IdempotencyPluginOptions,
+  options: IdempotencyPluginOptions
 ): Promise<ExpressMiddleware[]> => {
   const idempotency = await getIdempotencyInstance(options);
   return [successHandler(idempotency)];

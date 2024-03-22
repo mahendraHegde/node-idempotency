@@ -1,4 +1,4 @@
-export enum idempotencyErrorCodes {
+export enum IdempotencyErrorCodes {
   IDEMPOTENCY_KEY_LEN_EXEEDED = "IDEMPOTENCY_KEY_LEN_EXEEDED",
   IDEMPOTENCY_KEY_MISSING = "IDEMPOTENCY_KEY_MISSING",
   IDEMPOTENCY_FINGERPRINT_MISSMATCH = "IDEMPOTENCY_FINGERPRINT_MISSMATCH",
@@ -6,11 +6,11 @@ export enum idempotencyErrorCodes {
 }
 
 export class IdempotencyError extends Error {
-  code: idempotencyErrorCodes;
+  code: IdempotencyErrorCodes;
   meta?: Record<string, unknown>;
   constructor(
     message: string,
-    code: idempotencyErrorCodes,
+    code: IdempotencyErrorCodes,
     meta?: Record<string, unknown>,
   ) {
     super(message);
