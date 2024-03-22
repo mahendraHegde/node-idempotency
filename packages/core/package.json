@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "docs:core": "typedoc --commentStyle block --excludePrivate --plugin typedoc-plugin-markdown --out docs ./src/index.ts"
   },
   "keywords": [],
   "author": "Mahendra Hegde",

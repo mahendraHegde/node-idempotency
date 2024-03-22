@@ -1,10 +1,10 @@
-import { idempotencyErrorCodes } from "@node-idempotency/core";
+import { IdempotencyErrorCodes } from "@node-idempotency/core";
 
-export const idempotency2HttpCodeMap: Record<idempotencyErrorCodes, number> = {
-  [idempotencyErrorCodes.IDEMPOTENCY_FINGERPRINT_MISSMATCH]: 422,
-  [idempotencyErrorCodes.IDEMPOTENCY_KEY_LEN_EXEEDED]: 400,
-  [idempotencyErrorCodes.IDEMPOTENCY_KEY_MISSING]: 400,
-  [idempotencyErrorCodes.REQUEST_IN_PROGRESS]: 409,
+export const idempotency2HttpCodeMap: Record<IdempotencyErrorCodes, number> = {
+  [IdempotencyErrorCodes.IDEMPOTENCY_FINGERPRINT_MISSMATCH]: 422,
+  [IdempotencyErrorCodes.IDEMPOTENCY_KEY_LEN_EXEEDED]: 400,
+  [IdempotencyErrorCodes.IDEMPOTENCY_KEY_MISSING]: 400,
+  [IdempotencyErrorCodes.REQUEST_IN_PROGRESS]: 409,
 };
 
 export const headers2Cache: Record<string, string> = {
