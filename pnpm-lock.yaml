@@ -79,6 +79,10 @@ importers:
       "@node-idempotency/storage":
         specifier: 1.0.0
         version: link:../storage
+    devDependencies:
+      "@node-idempotency/storage-adapter-memory":
+        specifier: workspace:1.0.0
+        version: link:../storage-adapter-memory
 
   packages/plugin-express:
     dependencies:

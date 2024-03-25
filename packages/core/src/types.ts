@@ -3,7 +3,7 @@ export interface IdempotencyOptions {
    * @defaultValue `idempotency-key`
    *
    * specifies the header key to look for to get idempotency key
-   * case insensitive
+   * case insensitive.
    */
   idempotencyKey?: string;
   /**
