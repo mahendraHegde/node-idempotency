@@ -30,7 +30,15 @@ export interface IdempotencyOptions {
    * if set to `true` requests without idempotency key header will be rejected
    */
   enforceIdempotency?: boolean;
+
+  /**
+   * @defaultValue `undefined`
+   *
+   * custom way to specify which request to skip and which to accept
+   */
+  skipRequest?: (req: IdempotencyParamsWithDefaults) => boolean | Promise<boolean>;
 }
+
 export interface IdempotencyParams {
   headers: Record<string, unknown>;
   path: string;
@@ -39,9 +47,10 @@ export interface IdempotencyParams {
   options?: IdempotencyOptions;
 }
 
-/** @ignore */
-export interface IdempotencyParamsInternal extends IdempotencyParams {
-  options: Required<IdempotencyOptions>;
+export interface IdempotencyParamsWithDefaults extends IdempotencyParams {
+  options: Required<Omit<IdempotencyOptions, "skipRequest">> & {
+    skipRequest?: IdempotencyOptions["skipRequest"];
+  };
 }
 
 /** @ignore */
