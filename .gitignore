@@ -13,3 +13,4 @@ logs
 
 # Misc
 .DS_Store
+.npmrc

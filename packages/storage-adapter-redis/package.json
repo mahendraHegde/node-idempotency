@@ -11,10 +11,14 @@
   },
   "keywords": [
     "redis storage adapter",
-    "idempotency",
     "node-idempotency",
-    "redis",
-    "deduplicate"
+    "idempotency",
+    "deduplicate",
+    "request-idempotency",
+    "http-idempotency",
+    "api-idempotency",
+    "distributed-systems",
+    "request-deduplication"
   ],
   "author": "Mahendra Hegde",
   "license": "ISC",

@@ -1,7 +1,7 @@
 {
   "name": "node-idempotency",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Race-Condition free Node.js library that ensures idempotency for requests, preventing unintended duplicate operations.",
   "main": "index.js",
   "scripts": {
     "test": "pnpm --filter  @node-idempotency/* test",
@@ -13,7 +13,19 @@
     "typecheck": "pnpm --filter  @node-idempotency/* typecheck",
     "precommit": "pnpm format && pnpm lint:fix && pnpm build && pnpm test:e2e"
   },
-  "keywords": [],
+  "keywords": [
+    "nestjs",
+    "fastify",
+    "express",
+    "node-idempotency",
+    "idempotency",
+    "deduplicate",
+    "request-idempotency",
+    "http-idempotency",
+    "api-idempotency",
+    "distributed-systems",
+    "request-deduplicate"
+  ],
   "author": "Mahendra Hegde",
   "license": "ISC",
   "devDependencies": {

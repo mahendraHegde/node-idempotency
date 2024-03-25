@@ -1,7 +1,7 @@
 {
   "name": "@node-idempotency/fastify",
   "version": "1.0.0",
-  "description": "",
+  "description": "fastify plugin that provides Race-Condition free idempotency for HTTP requests, preventing unintended duplicate operations.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
@@ -11,9 +11,15 @@
   },
   "keywords": [
     "fastify",
+    "fastify-plugin",
     "node-idempotency",
     "idempotency",
-    "fastify-plugin"
+    "deduplicate",
+    "request-idempotency",
+    "http-idempotency",
+    "api-idempotency",
+    "distributed-systems",
+    "request-deduplication"
   ],
   "author": {
     "name": "Mahendra Hegde",

@@ -1,5 +1,5 @@
 <h3> Node-Idempotency </h3>
-<i>Make requests idempotent on nodejs.</i>
+<i>Race-condition free library to make requests idempotenct.</i>
 
 #### @node-idempotency/core
 

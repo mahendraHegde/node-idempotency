@@ -1,7 +1,7 @@
 {
   "name": "@node-idempotency/core",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Race-Condition free Node.js library that ensures idempotency for requests, preventing unintended duplicate operations.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
@@ -10,7 +10,16 @@
     "typecheck": "tsc -b",
     "docs:core": "typedoc --commentStyle block --excludePrivate --plugin typedoc-plugin-markdown --out docs ./src/index.ts"
   },
-  "keywords": [],
+  "keywords": [
+    "node-idempotency",
+    "idempotency",
+    "deduplicate",
+    "request-idempotency",
+    "http-idempotency",
+    "api-idempotency",
+    "distributed-systems",
+    "request-deduplicate"
+  ],
   "author": "Mahendra Hegde",
   "license": "ISC",
   "dependencies": {
