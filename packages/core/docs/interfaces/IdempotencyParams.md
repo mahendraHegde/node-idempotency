@@ -2,6 +2,12 @@
 
 # Interface: IdempotencyParams
 
+## Hierarchy
+
+- **`IdempotencyParams`**
+
+  ↳ [`IdempotencyParamsWithDefaults`](IdempotencyParamsWithDefaults.md)
+
 ## Table of contents
 
 ### Properties
@@ -20,9 +26,9 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:37](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/types.ts#L37)
+[packages/core/src/types.ts:45](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L45)
 
----
+___
 
 ### headers
 
@@ -30,9 +36,9 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:35](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/types.ts#L35)
+[packages/core/src/types.ts:43](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L43)
 
----
+___
 
 ### method
 
@@ -40,9 +46,9 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:38](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/types.ts#L38)
+[packages/core/src/types.ts:46](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L46)
 
----
+___
 
 ### options
 
@@ -50,9 +56,9 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:39](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/types.ts#L39)
+[packages/core/src/types.ts:47](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L47)
 
----
+___
 
 ### path
 
@@ -60,4 +66,4 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:36](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/types.ts#L36)
+[packages/core/src/types.ts:44](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L44)

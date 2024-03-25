@@ -2,7 +2,7 @@ import { type StorageAdapter } from "@node-idempotency/storage";
 import {
   HttpHeaderKeysEnum,
   type IdempotencyParams,
-  type IdempotencyParamsInternal,
+  type IdempotencyParamsWithDefaults,
   type IdempotencyResponse,
   type IdempotencyOptions,
   RequestStatusEnum,
@@ -16,7 +16,7 @@ import {
 import { IdempotencyError, IdempotencyErrorCodes } from "./error";
 import { createHash } from "crypto";
 export class Idempotency {
-  options: Required<IdempotencyOptions>;
+  options: IdempotencyParamsWithDefaults["options"];
   constructor(
     private readonly storage: StorageAdapter,
     options?: IdempotencyOptions,
@@ -33,7 +33,7 @@ export class Idempotency {
 
   private buildRequestOptions(
     options?: IdempotencyOptions,
-  ): Required<IdempotencyOptions> {
+  ): IdempotencyParamsWithDefaults["options"] {
     const enforceIdempotency =
       options?.enforceIdempotency !== undefined
         ? options?.enforceIdempotency
@@ -43,7 +43,7 @@ export class Idempotency {
 
   private getInternalRequest(
     req: IdempotencyParams,
-  ): IdempotencyParamsInternal {
+  ): IdempotencyParamsWithDefaults {
     return {
       ...req,
       options: this.buildRequestOptions(req.options),
@@ -51,7 +51,7 @@ export class Idempotency {
   }
 
   private getIdempotencyKey(
-    req: IdempotencyParamsInternal,
+    req: IdempotencyParamsWithDefaults,
   ): string | undefined {
     const key = Object.keys(req.headers).find(
       (key) => key.toLowerCase() === req.options.idempotencyKey.toLowerCase(),
@@ -59,7 +59,7 @@ export class Idempotency {
     return key ? (req.headers[key] as string) : undefined;
   }
 
-  private isEnabled(req: IdempotencyParamsInternal): boolean {
+  private async isEnabled(req: IdempotencyParamsWithDefaults): Promise<boolean> {
     const idempotencyKey = this.getIdempotencyKey(req);
     if (!idempotencyKey) {
       if (req.options?.enforceIdempotency) {
@@ -70,10 +70,14 @@ export class Idempotency {
       }
       return false;
     }
+    if (typeof req.options.skipRequest === "function") {
+      const shouldSkip = await req.options.skipRequest(req);
+      return !shouldSkip;
+    }
     return true;
   }
 
-  private validateRequest(req: IdempotencyParamsInternal): void {
+  private validateRequest(req: IdempotencyParamsWithDefaults): void {
     const idempotencyKey = this.getIdempotencyKey(req);
     if (idempotencyKey && idempotencyKey.length > req.options.keyMaxLength) {
       throw new IdempotencyError(
@@ -83,7 +87,7 @@ export class Idempotency {
     }
   }
 
-  private getIdempotencyCacheKey(req: IdempotencyParamsInternal): string {
+  private getIdempotencyCacheKey(req: IdempotencyParamsWithDefaults): string {
     const idempotencyKey = this.getIdempotencyKey(req);
     const { path, method } = req;
     return `${req.options.cacheKeyPrefix}:${method}:${path}:${idempotencyKey}`;
@@ -96,7 +100,7 @@ export class Idempotency {
     return hash.digest("hex");
   }
 
-  private getFingerPrint(req: IdempotencyParamsInternal): string | undefined {
+  private getFingerPrint(req: IdempotencyParamsWithDefaults): string | undefined {
     return req.body ? this.hash(req.body) : undefined;
   }
 
@@ -108,8 +112,8 @@ export class Idempotency {
   async onRequest<BodyType, ErrorType>(
     req: IdempotencyParams,
   ): Promise<IdempotencyResponse<BodyType, ErrorType> | undefined> {
-    const reqInternal: IdempotencyParamsInternal = this.getInternalRequest(req);
-    if (this.isEnabled(reqInternal)) {
+    const reqInternal: IdempotencyParamsWithDefaults = this.getInternalRequest(req);
+    if (await this.isEnabled(reqInternal)) {
       const fingerPrint = this.getFingerPrint(reqInternal);
       const payload: StoragePayload = {
         status: RequestStatusEnum.IN_PROGRESS,
@@ -155,7 +159,7 @@ export class Idempotency {
     res: IdempotencyResponse<BodyType, ErrorType>,
   ): Promise<void> {
     const reqInternal = this.getInternalRequest(req);
-    if (this.isEnabled(reqInternal)) {
+    if (await this.isEnabled(reqInternal)) {
       const fingerPrint = this.getFingerPrint(reqInternal);
       const cacheKey = this.getIdempotencyCacheKey(reqInternal);
       const payload: StoragePayload = {

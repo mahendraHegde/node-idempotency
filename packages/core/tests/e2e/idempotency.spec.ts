@@ -1,4 +1,9 @@
-import { HttpHeaderKeysEnum, Idempotency } from "../../src";
+import {
+  HttpHeaderKeysEnum,
+  Idempotency,
+  type IdempotencyParams,
+  type IdempotencyParamsWithDefaults,
+} from "../../src";
 import { MemoryStorageAdapter } from "@node-idempotency/storage-adapter-memory";
 
 describe("Idempotency (Integration Test)", () => {
@@ -24,6 +29,39 @@ describe("Idempotency (Integration Test)", () => {
     await idempotency.onResponse(req, res);
 
     const cachedResponse = await idempotency.onRequest(req);
+
+    expect(cachedResponse).toEqual(res);
+  });
+
+  it("should skip the request when method specified returns true", async () => {
+    const skipRequest = (request: IdempotencyParamsWithDefaults):boolean => {
+      return request.method === "POST";
+    };
+    let req: IdempotencyParams = {
+      headers: { [HttpHeaderKeysEnum.IDEMPOTENCY_KEY]: "2" },
+      path: "/pay",
+      body: { a: "a" },
+      method: "POST",
+      options: {
+        skipRequest,
+      },
+    };
+    const res = { body: { success: "true" } };
+    let idempotencyRes = await idempotency.onRequest(req);
+    expect(idempotencyRes).toBeUndefined();
+
+    await idempotency.onResponse(req, res);
+
+    let cachedResponse = await idempotency.onRequest(req);
+
+    expect(cachedResponse).toBeUndefined();
+
+    req = { ...req, method: "GET" };
+    idempotencyRes = await idempotency.onRequest(req);
+    expect(idempotencyRes).toBeUndefined();
+
+    await idempotency.onResponse(req, res);
+    cachedResponse = await idempotency.onRequest(req);
 
     expect(cachedResponse).toEqual(res);
   });

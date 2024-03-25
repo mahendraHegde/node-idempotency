@@ -25,9 +25,9 @@
 
 #### Parameters
 
-| Name       | Type                                                        |
-| :--------- | :---------------------------------------------------------- |
-| `storage`  | `StorageAdapter`                                            |
+| Name | Type |
+| :------ | :------ |
+| `storage` | `StorageAdapter` |
 | `options?` | [`IdempotencyOptions`](../interfaces/IdempotencyOptions.md) |
 
 #### Returns
@@ -36,17 +36,17 @@
 
 #### Defined in
 
-[packages/core/src/idempotency.ts:20](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/idempotency.ts#L20)
+[packages/core/src/idempotency.ts:20](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/idempotency.ts#L20)
 
 ## Properties
 
 ### options
 
-• **options**: `Required`\<[`IdempotencyOptions`](../interfaces/IdempotencyOptions.md)\>
+• **options**: `Required`\<`Omit`\<[`IdempotencyOptions`](../interfaces/IdempotencyOptions.md), ``"skipRequest"``\>\> & \{ `skipRequest?`: (`req`: [`IdempotencyParamsWithDefaults`](../interfaces/IdempotencyParamsWithDefaults.md)) => `boolean` \| `Promise`\<`boolean`\>  }
 
 #### Defined in
 
-[packages/core/src/idempotency.ts:19](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/idempotency.ts#L19)
+[packages/core/src/idempotency.ts:19](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/idempotency.ts#L19)
 
 ## Methods
 
@@ -56,15 +56,15 @@
 
 #### Type parameters
 
-| Name        |
-| :---------- |
-| `BodyType`  |
+| Name |
+| :------ |
+| `BodyType` |
 | `ErrorType` |
 
 #### Parameters
 
-| Name  | Type                                                      |
-| :---- | :-------------------------------------------------------- |
+| Name | Type |
+| :------ | :------ |
 | `req` | [`IdempotencyParams`](../interfaces/IdempotencyParams.md) |
 
 #### Returns
@@ -79,9 +79,9 @@ to be called on receiving the request, if the key is already cached, returns or 
 
 #### Defined in
 
-[packages/core/src/idempotency.ts:108](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/idempotency.ts#L108)
+[packages/core/src/idempotency.ts:112](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/idempotency.ts#L112)
 
----
+___
 
 ### onResponse
 
@@ -92,16 +92,16 @@ subsequent requests can use cached response.
 
 #### Type parameters
 
-| Name        |
-| :---------- |
-| `BodyType`  |
+| Name |
+| :------ |
+| `BodyType` |
 | `ErrorType` |
 
 #### Parameters
 
-| Name  | Type                                                                                     |
-| :---- | :--------------------------------------------------------------------------------------- |
-| `req` | [`IdempotencyParams`](../interfaces/IdempotencyParams.md)                                |
+| Name | Type |
+| :------ | :------ |
+| `req` | [`IdempotencyParams`](../interfaces/IdempotencyParams.md) |
 | `res` | [`IdempotencyResponse`](../interfaces/IdempotencyResponse.md)\<`BodyType`, `ErrorType`\> |
 
 #### Returns
@@ -110,4 +110,4 @@ subsequent requests can use cached response.
 
 #### Defined in
 
-[packages/core/src/idempotency.ts:153](https://github.com/mahendraHegde/idempotent-http/blob/addd6b0/packages/core/src/idempotency.ts#L153)
+[packages/core/src/idempotency.ts:157](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/idempotency.ts#L157)

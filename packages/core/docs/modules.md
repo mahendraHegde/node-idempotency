@@ -17,4 +17,5 @@
 
 - [IdempotencyOptions](interfaces/IdempotencyOptions.md)
 - [IdempotencyParams](interfaces/IdempotencyParams.md)
+- [IdempotencyParamsWithDefaults](interfaces/IdempotencyParamsWithDefaults.md)
 - [IdempotencyResponse](interfaces/IdempotencyResponse.md)
