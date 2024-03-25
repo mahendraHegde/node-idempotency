@@ -26,7 +26,7 @@ export default async (): Promise<express.Application> => {
   const app = express();
   app.use(bodyParser.json());
   const middleware = await idempotencyAsMiddleware({
-    storageAdapter: StorageAdapterEnum.memory,
+    storage: { adapter: StorageAdapterEnum.memory },
     enforceIdempotency: true,
     keyMaxLength: 3,
   });

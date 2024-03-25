@@ -163,6 +163,9 @@ importers:
       fastify:
         specifier: ^4.26.2
         version: 4.26.2
+      redis-memory-server:
+        specifier: ^0.10.0
+        version: 0.10.0
 
   packages/shared:
     dependencies:
@@ -176,7 +179,7 @@ importers:
         specifier: 1.0.0
         version: link:../storage-adapter-memory
       "@node-idempotency/storage-adapter-redis":
-        specifier: workspace:^
+        specifier: 1.0.0
         version: link:../storage-adapter-redis
 
   packages/storage: {}

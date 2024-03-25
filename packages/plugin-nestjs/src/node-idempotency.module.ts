@@ -1,10 +1,16 @@
-import { type DynamicModule, Module } from "@nestjs/common";
+import {
+  type DynamicModule,
+  Module,
+  type OnModuleDestroy,
+  Inject,
+} from "@nestjs/common";
 import { NodeIdempotencyInterceptor } from "./interceptors/node-idempotency.iterceptor";
 import {
   buildStorageAdapter,
   type IdempotencyPluginOptions,
 } from "@node-idempotency/shared";
 import { IDEMPOTENCY_OPTIONS, IDEMPOTENCY_STORAGE } from "./constants";
+import { StorageAdapter } from "packages/storage/dist";
 
 @Module({
   exports: [
@@ -13,7 +19,18 @@ import { IDEMPOTENCY_OPTIONS, IDEMPOTENCY_STORAGE } from "./constants";
     IDEMPOTENCY_OPTIONS,
   ],
 })
-export class NodeIdempotencyModule {
+export class NodeIdempotencyModule implements OnModuleDestroy {
+  constructor(
+    @Inject(IDEMPOTENCY_STORAGE)
+    private readonly stoarge: StorageAdapter,
+  ) {}
+
+  async onModuleDestroy(): Promise<void> {
+    if (typeof this.stoarge.disconnect === "function") {
+      await this.stoarge.disconnect();
+    }
+  }
+
   static forRootAsync(options: IdempotencyPluginOptions): DynamicModule {
     return {
       global: true,
@@ -23,7 +40,7 @@ export class NodeIdempotencyModule {
         {
           provide: IDEMPOTENCY_STORAGE,
           useFactory: async () => {
-            return await buildStorageAdapter(options.storageAdapter);
+            return await buildStorageAdapter(options.storage);
           },
         },
         {

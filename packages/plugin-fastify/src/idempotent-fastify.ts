@@ -18,13 +18,6 @@ import {
   IdempotencyErrorCodes,
 } from "@node-idempotency/core";
 
-const getIdempotencyInstance = async (
-  options: IdempotencyPluginOptions,
-): Promise<Idempotency> => {
-  const storageAdapter = await buildStorageAdapter(options.storageAdapter);
-  return new Idempotency(storageAdapter, options);
-};
-
 const setHeaders = (
   response: FastifyReply,
   headers: Record<string, string>,
@@ -117,7 +110,9 @@ const onRequest = async (
 export const idempotencyAsPlugin: FastifyPluginAsync<
   IdempotencyPluginOptions
 > = async (fastify, options) => {
-  const idempotency = await getIdempotencyInstance(options);
+  const storageAdapter = await buildStorageAdapter(options.storage);
+  const idempotency = new Idempotency(storageAdapter, options);
+
   fastify.addHook(
     "preHandler",
     async (request: FastifyRequest, reply: FastifyReply) => {
@@ -135,4 +130,10 @@ export const idempotencyAsPlugin: FastifyPluginAsync<
       await onResponse(request, reply, payload, idempotency);
     },
   );
+
+  fastify.addHook("onClose", async () => {
+    if (typeof storageAdapter.disconnect === "function") {
+      await storageAdapter.disconnect();
+    }
+  });
 };

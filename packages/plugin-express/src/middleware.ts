@@ -19,7 +19,7 @@ import { type ExpressMiddleware } from "./types";
 const getIdempotencyInstance = async (
   options: IdempotencyPluginOptions,
 ): Promise<Idempotency> => {
-  const storageAdapter = await buildStorageAdapter(options.storageAdapter);
+  const storageAdapter = await buildStorageAdapter(options.storage);
   return new Idempotency(storageAdapter, options);
 };
 
