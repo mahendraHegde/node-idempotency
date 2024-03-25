@@ -18,7 +18,11 @@ import * as express from "express";
 export default async (): Promise<express.Application> => {
   const app = express();
   const middleware = await idempotencyAsMiddleware({
-    storageAdapter: StorageAdapterEnum.memory,
+    storage:{
+      adapter: StorageAdapterEnum.memory
+      options: ...adapterOptions
+    },
+  ...idempotencyOptions
   });
   app.use(middleware);
   //register routes here
@@ -28,5 +32,6 @@ export default async (): Promise<express.Application> => {
 };
 ```
 
-- `storageAdapter` can either be `memory`, `redis` or an instance of [`Storage`](../storage/Readme.md) interface
+- `storage.adapter` can either be `memory`, `redis` or an instance of [`Storage`](../storage/Readme.md) interface.
+- `storage.options` are options to the storage client, required for `redis`, is client options of [redis client](https://www.npmjs.com/package/redis).
 - `idempotencyOptions` are the [`IdempotencyOptions`](../core/docs/interfaces/IdempotencyOptions.md) passed to `@node-idempotency/core/Idempotency`

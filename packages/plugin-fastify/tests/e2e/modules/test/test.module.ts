@@ -9,7 +9,7 @@ import {
 
 const server = fastify();
 void server.register(fp<IdempotencyPluginOptions>(idempotencyAsPlugin), {
-  storageAdapter: StorageAdapterEnum.memory,
+  storage: { adapter: StorageAdapterEnum.memory },
   enforceIdempotency: true,
   keyMaxLength: 3,
 });

@@ -19,14 +19,18 @@ import {NodeIdempotencyModule} from '@node-idempotency/nestjs'
 @Module({
   imports: [
     NodeIdempotencyModule.forRootAsync({
-      storageAdapter: StorageAdapterEnum.memory,
+      storage:{
+        adapter: StorageAdapterEnum.memory
+        options: ...adapterOptions
+        },
       ...idempotencyOptions
     }),
   ],
 })
 ```
 
-- `storageAdapter` can either be `memory`, `redis` or an instance of [`Storage`](../storage/Readme.md) interface
+- `storage.adapter` can either be `memory`, `redis` or an instance of [`Storage`](../storage/Readme.md) interface.
+- `storage.options` are options to the storage client, required for `redis`, is client options of [redis client](https://www.npmjs.com/package/redis).
 - `idempotencyOptions` are the [`IdempotencyOptions`](../core/Readme.md) passed to `@node-idempotency/core/Idempotency`
 
 2. Decorate controllers or handlers
