@@ -25,9 +25,9 @@
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `storage` | `StorageAdapter` |
+| Name       | Type                                                        |
+| :--------- | :---------------------------------------------------------- |
+| `storage`  | `StorageAdapter`                                            |
 | `options?` | [`IdempotencyOptions`](../interfaces/IdempotencyOptions.md) |
 
 #### Returns
@@ -42,7 +42,7 @@
 
 ### options
 
-• **options**: `Required`\<`Omit`\<[`IdempotencyOptions`](../interfaces/IdempotencyOptions.md), ``"skipRequest"``\>\> & \{ `skipRequest?`: (`req`: [`IdempotencyParamsWithDefaults`](../interfaces/IdempotencyParamsWithDefaults.md)) => `boolean` \| `Promise`\<`boolean`\>  }
+• **options**: `Required`\<`Omit`\<[`IdempotencyOptions`](../interfaces/IdempotencyOptions.md), `"skipRequest"`\>\> & \{ `skipRequest?`: (`req`: [`IdempotencyParamsWithDefaults`](../interfaces/IdempotencyParamsWithDefaults.md)) => `boolean` \| `Promise`\<`boolean`\> }
 
 #### Defined in
 
@@ -56,15 +56,15 @@
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `BodyType` |
+| Name        |
+| :---------- |
+| `BodyType`  |
 | `ErrorType` |
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name  | Type                                                      |
+| :---- | :-------------------------------------------------------- |
 | `req` | [`IdempotencyParams`](../interfaces/IdempotencyParams.md) |
 
 #### Returns
@@ -81,7 +81,7 @@ to be called on receiving the request, if the key is already cached, returns or 
 
 [packages/core/src/idempotency.ts:112](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/idempotency.ts#L112)
 
-___
+---
 
 ### onResponse
 
@@ -92,16 +92,16 @@ subsequent requests can use cached response.
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `BodyType` |
+| Name        |
+| :---------- |
+| `BodyType`  |
 | `ErrorType` |
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `req` | [`IdempotencyParams`](../interfaces/IdempotencyParams.md) |
+| Name  | Type                                                                                     |
+| :---- | :--------------------------------------------------------------------------------------- |
+| `req` | [`IdempotencyParams`](../interfaces/IdempotencyParams.md)                                |
 | `res` | [`IdempotencyResponse`](../interfaces/IdempotencyResponse.md)\<`BodyType`, `ErrorType`\> |
 
 #### Returns

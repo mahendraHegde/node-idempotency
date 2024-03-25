@@ -34,7 +34,7 @@ describe("Idempotency (Integration Test)", () => {
   });
 
   it("should skip the request when method specified returns true", async () => {
-    const skipRequest = (request: IdempotencyParamsWithDefaults):boolean => {
+    const skipRequest = (request: IdempotencyParamsWithDefaults): boolean => {
       return request.method === "POST";
     };
     let req: IdempotencyParams = {

@@ -36,7 +36,9 @@ export interface IdempotencyOptions {
    *
    * custom way to specify which request to skip and which to accept
    */
-  skipRequest?: (req: IdempotencyParamsWithDefaults) => boolean | Promise<boolean>;
+  skipRequest?: (
+    req: IdempotencyParamsWithDefaults,
+  ) => boolean | Promise<boolean>;
 }
 
 export interface IdempotencyParams {

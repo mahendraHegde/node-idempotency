@@ -28,7 +28,7 @@
 
 [packages/core/src/types.ts:45](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L45)
 
-___
+---
 
 ### headers
 
@@ -38,7 +38,7 @@ ___
 
 [packages/core/src/types.ts:43](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L43)
 
-___
+---
 
 ### method
 
@@ -48,7 +48,7 @@ ___
 
 [packages/core/src/types.ts:46](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L46)
 
-___
+---
 
 ### options
 
@@ -58,7 +58,7 @@ ___
 
 [packages/core/src/types.ts:47](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L47)
 
-___
+---
 
 ### path
 
