@@ -6,46 +6,46 @@
 
 ### Enumeration Members
 
-- [IDEMPOTENCY\_FINGERPRINT\_MISSMATCH](IdempotencyErrorCodes.md#idempotency_fingerprint_missmatch)
-- [IDEMPOTENCY\_KEY\_LEN\_EXEEDED](IdempotencyErrorCodes.md#idempotency_key_len_exeeded)
-- [IDEMPOTENCY\_KEY\_MISSING](IdempotencyErrorCodes.md#idempotency_key_missing)
-- [REQUEST\_IN\_PROGRESS](IdempotencyErrorCodes.md#request_in_progress)
+- [IDEMPOTENCY_FINGERPRINT_MISSMATCH](IdempotencyErrorCodes.md#idempotency_fingerprint_missmatch)
+- [IDEMPOTENCY_KEY_LEN_EXEEDED](IdempotencyErrorCodes.md#idempotency_key_len_exeeded)
+- [IDEMPOTENCY_KEY_MISSING](IdempotencyErrorCodes.md#idempotency_key_missing)
+- [REQUEST_IN_PROGRESS](IdempotencyErrorCodes.md#request_in_progress)
 
 ## Enumeration Members
 
-### IDEMPOTENCY\_FINGERPRINT\_MISSMATCH
+### IDEMPOTENCY_FINGERPRINT_MISSMATCH
 
-• **IDEMPOTENCY\_FINGERPRINT\_MISSMATCH** = ``"IDEMPOTENCY_FINGERPRINT_MISSMATCH"``
+• **IDEMPOTENCY_FINGERPRINT_MISSMATCH** = `"IDEMPOTENCY_FINGERPRINT_MISSMATCH"`
 
 #### Defined in
 
 [packages/core/src/error.ts:4](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/error.ts#L4)
 
-___
+---
 
-### IDEMPOTENCY\_KEY\_LEN\_EXEEDED
+### IDEMPOTENCY_KEY_LEN_EXEEDED
 
-• **IDEMPOTENCY\_KEY\_LEN\_EXEEDED** = ``"IDEMPOTENCY_KEY_LEN_EXEEDED"``
+• **IDEMPOTENCY_KEY_LEN_EXEEDED** = `"IDEMPOTENCY_KEY_LEN_EXEEDED"`
 
 #### Defined in
 
 [packages/core/src/error.ts:2](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/error.ts#L2)
 
-___
+---
 
-### IDEMPOTENCY\_KEY\_MISSING
+### IDEMPOTENCY_KEY_MISSING
 
-• **IDEMPOTENCY\_KEY\_MISSING** = ``"IDEMPOTENCY_KEY_MISSING"``
+• **IDEMPOTENCY_KEY_MISSING** = `"IDEMPOTENCY_KEY_MISSING"`
 
 #### Defined in
 
 [packages/core/src/error.ts:3](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/error.ts#L3)
 
-___
+---
 
-### REQUEST\_IN\_PROGRESS
+### REQUEST_IN_PROGRESS
 
-• **REQUEST\_IN\_PROGRESS** = ``"REQUEST_IN_PROGRESS"``
+• **REQUEST_IN_PROGRESS** = `"REQUEST_IN_PROGRESS"`
 
 #### Defined in
 

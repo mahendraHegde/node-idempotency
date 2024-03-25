@@ -32,7 +32,7 @@
 
 [packages/core/src/types.ts:45](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L45)
 
-___
+---
 
 ### headers
 
@@ -46,7 +46,7 @@ ___
 
 [packages/core/src/types.ts:43](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L43)
 
-___
+---
 
 ### method
 
@@ -60,11 +60,11 @@ ___
 
 [packages/core/src/types.ts:46](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L46)
 
-___
+---
 
 ### options
 
-• **options**: `Required`\<`Omit`\<[`IdempotencyOptions`](IdempotencyOptions.md), ``"skipRequest"``\>\> & \{ `skipRequest?`: (`req`: [`IdempotencyParamsWithDefaults`](IdempotencyParamsWithDefaults.md)) => `boolean` \| `Promise`\<`boolean`\>  }
+• **options**: `Required`\<`Omit`\<[`IdempotencyOptions`](IdempotencyOptions.md), `"skipRequest"`\>\> & \{ `skipRequest?`: (`req`: [`IdempotencyParamsWithDefaults`](IdempotencyParamsWithDefaults.md)) => `boolean` \| `Promise`\<`boolean`\> }
 
 #### Overrides
 
@@ -74,7 +74,7 @@ ___
 
 [packages/core/src/types.ts:51](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L51)
 
-___
+---
 
 ### path
 

@@ -29,7 +29,7 @@ prefix/namespace for cache key
 
 [packages/core/src/types.ts:20](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L20)
 
-___
+---
 
 ### cacheTTLMS
 
@@ -45,7 +45,7 @@ ttl for idempotency
 
 [packages/core/src/types.ts:26](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L26)
 
-___
+---
 
 ### enforceIdempotency
 
@@ -61,7 +61,7 @@ if set to `true` requests without idempotency key header will be rejected
 
 [packages/core/src/types.ts:32](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L32)
 
-___
+---
 
 ### idempotencyKey
 
@@ -78,7 +78,7 @@ case insensitive.
 
 [packages/core/src/types.ts:8](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L8)
 
-___
+---
 
 ### keyMaxLength
 
@@ -94,7 +94,7 @@ restricts max length of idempotency key
 
 [packages/core/src/types.ts:14](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L14)
 
-___
+---
 
 ### skipRequest
 
@@ -112,8 +112,8 @@ custom way to specify which request to skip and which to accept
 
 ##### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name  | Type                                                                |
+| :---- | :------------------------------------------------------------------ |
 | `req` | [`IdempotencyParamsWithDefaults`](IdempotencyParamsWithDefaults.md) |
 
 ##### Returns

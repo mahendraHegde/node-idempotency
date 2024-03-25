@@ -59,7 +59,9 @@ export class Idempotency {
     return key ? (req.headers[key] as string) : undefined;
   }
 
-  private async isEnabled(req: IdempotencyParamsWithDefaults): Promise<boolean> {
+  private async isEnabled(
+    req: IdempotencyParamsWithDefaults,
+  ): Promise<boolean> {
     const idempotencyKey = this.getIdempotencyKey(req);
     if (!idempotencyKey) {
       if (req.options?.enforceIdempotency) {
@@ -100,7 +102,9 @@ export class Idempotency {
     return hash.digest("hex");
   }
 
-  private getFingerPrint(req: IdempotencyParamsWithDefaults): string | undefined {
+  private getFingerPrint(
+    req: IdempotencyParamsWithDefaults,
+  ): string | undefined {
     return req.body ? this.hash(req.body) : undefined;
   }
 
@@ -112,7 +116,8 @@ export class Idempotency {
   async onRequest<BodyType, ErrorType>(
     req: IdempotencyParams,
   ): Promise<IdempotencyResponse<BodyType, ErrorType> | undefined> {
-    const reqInternal: IdempotencyParamsWithDefaults = this.getInternalRequest(req);
+    const reqInternal: IdempotencyParamsWithDefaults =
+      this.getInternalRequest(req);
     if (await this.isEnabled(reqInternal)) {
       const fingerPrint = this.getFingerPrint(reqInternal);
       const payload: StoragePayload = {
