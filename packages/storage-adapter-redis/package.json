@@ -1,0 +1,28 @@
+{
+  "name": "@node-idempotency/storage-adapter-redis",
+  "version": "1.0.0",
+  "description": "redis storage adapter for node-idempotency",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "test:e2e": "jest --config ./tests/jest-e2e.json --runInBand --forceExit",
+    "build": "tsc -p ./tsconfig.build.json",
+    "typecheck": "tsc -b"
+  },
+  "keywords": [
+    "redis storage adapter",
+    "idempotency",
+    "node-idempotency",
+    "redis",
+    "deduplicate"
+  ],
+  "author": "Mahendra Hegde",
+  "license": "ISC",
+  "dependencies": {
+    "@node-idempotency/storage": "1.0.0",
+    "redis": "^4.6.13"
+  },
+  "devDependencies": {
+    "redis-memory-server": "^0.10.0"
+  }
+}
