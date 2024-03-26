@@ -14,37 +14,40 @@ npm i @node-idempotency/nestjs
 1. Register the module
 
 ```ts
-import {NodeIdempotencyModule} from '@node-idempotency/nestjs'
+import { NodeIdempotencyModule } from '@node-idempotency/nestjs';
 
 @Module({
   imports: [
     NodeIdempotencyModule.forRootAsync({
-      storage:{
-        adapter: StorageAdapterEnum.memory
-        options: ...adapterOptions
-        },
-      ...idempotencyOptions
+      storage: {
+        adapter: StorageAdapterEnum.memory, // or 'redis'
+        options: /* adapter options */,
+      },
+      ...idempotencyOptions, // additional idempotency options
     }),
   ],
 })
+export class AppModule {}
+
 ```
 
-- `storage.adapter` can either be `memory`, `redis` or an instance of [`Storage`](https://github.com/mahendraHegde/node-idempotency/tree/main/packages/storage) interface.
-- `storage.options` are options to the storage client, required for `redis`, is client options of [redis client](https://www.npmjs.com/package/redis).
-- `idempotencyOptions` are the [`IdempotencyOptions`](https://github.com/mahendraHegde/node-idempotency/blob/main/packages/core/docs/interfaces/IdempotencyOptions.md) passed to `@node-idempotency/core/Idempotency`
+  - `storage.adapter` can either be `memory`, `redis` or an instance of [`Storage`](https://github.com/mahendraHegde/node-idempotency/tree/main/packages/storage) interface.
+  - `storage.options` are options to the storage client, required for `redis`, is client options of [redis client](https://www.npmjs.com/package/redis).
+  - `idempotencyOptions` are the [`IdempotencyOptions`](https://github.com/mahendraHegde/node-idempotency/blob/main/packages/core/docs/interfaces/IdempotencyOptions.md) passed to `@node-idempotency/core/Idempotency`
 
 2. Decorate controllers or handlers
 
-- Decorating controllers
+  - Decorating controllers
 
 ```ts
-import { Idempotent } from "@node-idempotency/nestjs";
+import { Controller, Get, Post, HttpCode, Body } from '@nestjs/common';
+import { Idempotent } from '@node-idempotency/nestjs';
 
 @Controller()
-@Idempotent({ ...idempotencyOptions }) //this will override the options provided while registering the module
+@Idempotent({ ...idempotencyOptions }) // Override module-level options
 export class CounterController {
   counter = 0;
-  // all handler are idempotent now
+
   @Get()
   getNumber(): number {
     return this.counter++;
@@ -53,23 +56,23 @@ export class CounterController {
   @Post()
   @HttpCode(201)
   async addNumber(@Body() { number }: { number: number }): Promise<number> {
-    this.adCounter += number;
-    return this.adCounter;
+    this.counter += number;
+    return this.counter;
   }
 }
 ```
 
-- Decorating selected handlers
+  - Decorating selected handlers
 
 ```ts
-import { Idempotent } from "@node-idempotency/nestjs";
+import { Controller, Get, Post, HttpCode, Body } from '@nestjs/common';
+import { Idempotent } from '@node-idempotency/nestjs';
 
 @Controller()
 export class CounterController {
   counter = 0;
 
-  //only GET is idempotenct POST is not
-  @Idempotent({ ...idempotencyOptions }) //this will override the options provided while registering the module
+  @Idempotent({ ...idempotencyOptions }) // Override module-level options
   @Get()
   getNumber(): number {
     return this.counter++;
@@ -78,11 +81,12 @@ export class CounterController {
   @Post()
   @HttpCode(201)
   async addNumber(@Body() { number }: { number: number }): Promise<number> {
-    this.adCounter += number;
-    return this.adCounter;
+    this.counter += number;
+    return this.counter;
   }
 }
 ```
+
 
 Library also exports the interceptor, you can use it like you would use any nestjs interceptors(ex: registering globaly)
 

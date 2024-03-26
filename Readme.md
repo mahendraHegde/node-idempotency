@@ -1,15 +1,24 @@
 <h3> Node-Idempotency </h3>
-<i>Race-condition free library to make requests idempotenct.</i>
+<i>makes any request idepotent.</i>
 
-#### @node-idempotency/core
+<br/>
+<br/>
+package that is
 
-Core package that, makes requests idempotent and powers
+- <i>Race Condition free.</i>
+- <i>Modular, you can attach your storage or plug in core implementation into your implemtation.</i>
+- <i>[RFC](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/) compliant. </i>
+
+and powers,
 
 - [`@node-idempotency/nestjs`](https://www.npmjs.com/package/@node-idempotency/nestjs) - Plug and Play `nestjs` wrapper for `@node-idempotency/core`
 
 - [`@node-idempotency/express`](https://www.npmjs.com/package/@node-idempotency/express) - Plug and Play `express` middleware for `@node-idempotency/core`
 
 - [`@node-idempotency/fastify`](https://www.npmjs.com/package/@node-idempotency/fastify) - Plug and Play `fastify` plugin for `@node-idempotency/core`
+
+
+#### @node-idempotency/core
 
 if above packages dont meet your needs, you can utilise the core package directly to tweek it as per your needs.
 
@@ -30,46 +39,45 @@ if its a new request, it marks the request as progress generates fingerprint usi
 `onResponse` handler is called by you when your business logic completes for the first time, so that the response can be stored and the request can be marked as complete.
 
 ```ts
-import { Idempotency } from '@node-idempotency/core'
-import { MemoryStorageAdapter } from "@node-idempotency/storage-adapter-memory"; //or any other storage adapter of your choice which meets @node-idempotency/storage interface
+import { Idempotency } from '@node-idempotency/core';
+import { MemoryStorageAdapter } from '@node-idempotency/storage-adapter-memory';
 
-const idempotency = new Idempotency(new MemoryStorageAdapter(), {...idempotencyOptions});
+// Create an Idempotency instance using a MemoryStorageAdapter
+const idempotency = new Idempotency(new MemoryStorageAdapter(), { ...idempotencyOptions });
 
-// on receiving the request call `onRequest`
-// it validate the request based on `idempotencyOptions` and throws eror if the request is concurrent, sends different body for the same key or doesnt sent idempotency-key when idempotency is enforced
+// On receiving a request, call `onRequest` to validate idempotency
 try {
   const response = await idempotency.onRequest({
-    method: "POST",
-    headers: { "idempotency-key": "123" },
+    method: 'POST',
+    headers: { 'idempotency-key': '123' },
     body: { pay: 100 },
-    path: "/charge",
-    options: { ...idempotencyOptions } //use options here override idempotencyOptions per request level
+    path: '/charge',
+    options: { ...idempotencyOptions }, // Optional request-level overrides
   });
 
   if (!response) {
-    //request is new, allow it to proceed
+    // New request, allow it to proceed
     return;
   }
-  // its a duplicate, dont process again, return previous response
-  // ex: res.status(response.additional.status).send(response.body)
+
+  // Duplicate request, return previous response
+  // Example: res.status(response.additional.status).send(response.body)
 } catch (err) {
-  //handle idempotency error here(conflict, in-progress, figerprint missmatch etc).
-  //check api details for defined error codes.
+  // Handle idempotency errors (conflict, in-progress, fingerprint mismatch, etc.)
+  // Refer to API documentation for specific error codes
 }
 
-// make sure to intercept the response so that the cycle is complete
-  const response = await idempotency.onResponse(
-    {
-    method: "POST",
-    headers: { "idempotency-key": "123" },
-    body: { pay: 100 },
-    path: "/charge",
-    options: { ...idempotencyOptions } //use options here override idempotencyOptions per request level
-  },
-  {
-    body:{ charge:"success" } //or error: your_error,
-    additional:{ status: 201 }
-  });
+// Intercept response to complete the idempotency cycle
+const response = await idempotency.onResponse({
+  method: 'POST',
+  headers: { 'idempotency-key': '123' },
+  body: { pay: 100 },
+  path: '/charge',
+  options: { ...idempotencyOptions }, // Optional request-level overrides
+}, {
+  body: { charge: 'success' }, // or error: your_error
+  additional: { status: 201 },
+});
 
 ```
 
