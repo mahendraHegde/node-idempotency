@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "build": "pnpm --filter  @node-idempotency/* build",
     "typecheck": "pnpm --filter  @node-idempotency/* typecheck",
-    "precommit": "pnpm format && pnpm lint:fix && pnpm build && pnpm test:e2e"
+    "precommit": "pnpm build && pnpm format && pnpm lint:fix && pnpm test:e2e"
   },
   "keywords": [
     "nestjs",

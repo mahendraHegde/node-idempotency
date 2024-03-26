@@ -33,6 +33,6 @@ server.register(fp<IdempotencyPluginOptions>(idempotencyAsPlugin), {
 export default server;
 ```
 
-- `storage.adapter` can either be `memory`, `redis` or an instance of [`Storage`](../storage/Readme.md) interface.
+- `storage.adapter` can either be `memory`, `redis` or an instance of [`Storage`](https://github.com/mahendraHegde/node-idempotency/tree/main/packages/storage) interface.
 - `storage.options` are options to the storage client, required for `redis`, is client options of [redis client](https://www.npmjs.com/package/redis).
-- `idempotencyOptions` are the [`IdempotencyOptions`](../core/Readme.md) passed to `@node-idempotency/core/Idempotency`
+- `idempotencyOptions` are the [`IdempotencyOptions`](https://github.com/mahendraHegde/node-idempotency/blob/main/packages/core/docs/interfaces/IdempotencyOptions.md) passed to `@node-idempotency/core/Idempotency`

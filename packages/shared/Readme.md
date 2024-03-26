@@ -1,1 +1,1 @@
-#### node-idempotency/helpers
+#### node-idempotency/shared

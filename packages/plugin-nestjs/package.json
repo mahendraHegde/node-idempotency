@@ -4,7 +4,11 @@
   "description": "Nestjs Plugin that provides Race-Condition free idempotency for HTTP requests, preventing unintended duplicate operations.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
+    "prepublishOnly": "pnpm build",
     "test:e2e": "jest --config ./tests/jest-e2e.json --runInBand --forceExit",
     "build": "tsc -p ./tsconfig.build.json",
     "typecheck": "tsc -b"
@@ -29,9 +33,9 @@
   "dependencies": {
     "@nestjs/common": "^10.3.3",
     "@nestjs/core": "^10.3.3",
-    "@node-idempotency/core": "1.0.0",
+    "@node-idempotency/core": "1.0.4",
     "@node-idempotency/shared": "1.0.0",
-    "@node-idempotency/storage": "1.0.0",
+    "@node-idempotency/storage": "1.0.1",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
@@ -40,5 +44,8 @@
     "@types/supertest": "^6.0.2",
     "fastify": "^4.26.2",
     "redis-memory-server": "^0.10.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

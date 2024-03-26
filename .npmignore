@@ -1,0 +1,9 @@
+.github/
+.vscode/
+docs/
+examples/
+src/
+CONTRIBUTING.md
+SECURITY.md
+tsconfig.base.json
+tsconfig.json

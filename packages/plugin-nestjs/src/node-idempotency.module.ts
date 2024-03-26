@@ -10,7 +10,7 @@ import {
   type IdempotencyPluginOptions,
 } from "@node-idempotency/shared";
 import { IDEMPOTENCY_OPTIONS, IDEMPOTENCY_STORAGE } from "./constants";
-import { StorageAdapter } from "packages/storage/dist";
+import { StorageAdapter } from "@node-idempotency/storage";
 
 @Module({
   exports: [

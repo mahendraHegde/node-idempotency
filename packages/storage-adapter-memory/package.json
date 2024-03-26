@@ -4,7 +4,11 @@
   "description": "in memory storage adapter for node-idempotency",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
+    "prepublishOnly": "pnpm build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "typecheck": "tsc -b"
@@ -17,6 +21,9 @@
   "author": "Mahendra Hegde",
   "license": "ISC",
   "dependencies": {
-    "@node-idempotency/storage": "1.0.0"
+    "@node-idempotency/storage": "1.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

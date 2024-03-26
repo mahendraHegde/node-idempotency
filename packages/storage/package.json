@@ -1,15 +1,22 @@
 {
   "name": "@node-idempotency/storage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
+    "prepublishOnly": "pnpm build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "typecheck": "tsc -b"
   },
   "keywords": [],
   "author": "Mahendra Hegde",
-  "license": "ISC"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }

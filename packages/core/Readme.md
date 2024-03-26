@@ -2,11 +2,11 @@
 
 Core package that, makes requests idempotent and powers
 
-- [`@node-idempotency/nestjs`](packages/plugin-nestjs/Readme.md) - Plug and Play `nestjs` wrapper for `@node-idempotency/core`
+- [`@node-idempotency/nestjs`](https://www.npmjs.com/package/@node-idempotency/nestjs) - Plug and Play `nestjs` wrapper for `@node-idempotency/core`
 
-- [`@node-idempotency/express`](packages/plugin-express/Readme.md) - Plug and Play `express` middleware for `@node-idempotency/core`
+- [`@node-idempotency/express`](https://www.npmjs.com/package/@node-idempotency/express) - Plug and Play `express` middleware for `@node-idempotency/core`
 
-- [`@node-idempotency/fastify`](packages/plugin-fastify/Readme.md) - Plug and Play `fastify` plugin for `@node-idempotency/core`
+- [`@node-idempotency/fastify`](https://www.npmjs.com/package/@node-idempotency/fastify) - Plug and Play `fastify` plugin for `@node-idempotency/core`
 
 if above packages dont meet your needs, you can utilise the core package directly to tweek it as per your needs.
 
@@ -70,4 +70,4 @@ try {
 
 ```
 
-check details about the api [here](./docs/classes/Idempotency.md)
+check details about the api [here](https://github.com/mahendraHegde/node-idempotency/blob/main/packages/core/docs/classes/Idempotency.md)
