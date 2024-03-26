@@ -26,7 +26,7 @@
     "idempotent request"
   ],
   "author": "Mahendra Hegde",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@node-idempotency/storage-adapter-memory": "1.0.0"
   },

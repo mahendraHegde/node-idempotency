@@ -19,7 +19,7 @@
     "node-idempotency"
   ],
   "author": "Mahendra Hegde",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@node-idempotency/storage": "1.0.1"
   },

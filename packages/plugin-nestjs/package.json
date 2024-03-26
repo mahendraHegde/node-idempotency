@@ -29,7 +29,7 @@
     "name": "Mahendra Hegde",
     "url": "https://github.com/mahendraHegde"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@node-idempotency/core": "1.0.4",
     "@node-idempotency/shared": "1.0.0",
