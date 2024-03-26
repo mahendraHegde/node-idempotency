@@ -29,6 +29,7 @@
   "author": "Mahendra Hegde",
   "license": "ISC",
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@nestjs/platform-express": "^10.3.3",
     "@nestjs/testing": "^10.3.3",
     "@types/jest": "^29.5.12",

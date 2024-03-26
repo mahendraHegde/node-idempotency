@@ -22,5 +22,7 @@
 1. Make changes to your local copy.
 2. add/fix the tests.
 3. add/fix readme.
-4. push to your forked repo.
-5. raise PR.
+4. run `pnpm run precommit`
+5. add changesets by using `pnpm changeset`
+6. push to your forked repo.
+7. raise PR.
