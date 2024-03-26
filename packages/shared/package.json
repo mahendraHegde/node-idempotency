@@ -16,5 +16,8 @@
     "@node-idempotency/storage-adapter-memory": "1.0.0",
     "@node-idempotency/storage-adapter-redis": "1.0.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "ISC"
 }
