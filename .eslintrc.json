@@ -12,6 +12,8 @@
   "plugins": ["unused-imports"],
   "rules": {
     "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/no-unsafe-argument": "warn",
+    "@typescript-eslint/return-await": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [

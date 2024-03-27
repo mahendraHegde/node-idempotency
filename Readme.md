@@ -1,3 +1,9 @@
+<!-- README.md -->
+
+[![cov](https://we-cli.github.io/jayin/badges/coverage.svg)](https://github.com/mahendraHegde/node-idempotency/actions)
+
+---
+
 <h3> Node-Idempotency </h3>
 <i>makes any request idepotent.</i>
 
