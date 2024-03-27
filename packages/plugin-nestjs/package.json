@@ -27,7 +27,16 @@
     "http-idempotency",
     "api-idempotency",
     "distributed-systems",
-    "request-deduplication"
+    "nodejs",
+    "request-deduplication",
+    "idempotent",
+    "safe operation",
+    "duplicate handling",
+    "request deduplication",
+    "retry with safety",
+    "at-least-once semantics",
+    "data consistency",
+    "idempotency-key"
   ],
   "author": {
     "name": "Mahendra Hegde",

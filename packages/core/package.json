@@ -27,7 +27,17 @@
     "api-idempotency",
     "distributed-systems",
     "request-deduplicate",
-    "idempotent request"
+    "idempotent request",
+    "nodejs",
+    "request-deduplication",
+    "idempotent",
+    "safe operation",
+    "duplicate handling",
+    "request deduplication",
+    "retry with safety",
+    "at-least-once semantics",
+    "data consistency",
+    "idempotency-key"
   ],
   "author": "Mahendra Hegde",
   "license": "MIT",
