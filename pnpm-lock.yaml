@@ -102,8 +102,8 @@ importers:
         specifier: 1.0.1
         version: link:../storage-adapter-memory
       express:
-        specifier: ^4.19.1
-        version: 4.19.1
+        specifier: ^4.19.2
+        version: 4.19.2
     devDependencies:
       "@types/express":
         specifier: ^4.17.21
@@ -4167,10 +4167,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /express@4.19.1:
+  /express@4.19.2:
     resolution:
       {
-        integrity: sha512-K4w1/Bp7y8iSiVObmCrtq8Cs79XjJc/RU2YYkZQ7wpUu5ZyZ7MtPHkqoMz4pf+mgXfNvo2qft8D9OnrH2ABk9w==,
+        integrity: sha512-5T6nhjsT+EOMzuck8JjBHARTHfMht0POzlA60WV2pMD3gyXw2LZnZ+ueGdNxG+0calOJcWKbpFcuzLZ91YWq9Q==,
       }
     engines: { node: ">= 0.10.0" }
     dependencies:
