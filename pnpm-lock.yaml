@@ -80,26 +80,26 @@ importers:
   packages/core:
     dependencies:
       "@node-idempotency/storage":
-        specifier: 1.0.1
+        specifier: 1.0.2
         version: link:../storage
     devDependencies:
       "@node-idempotency/storage-adapter-memory":
-        specifier: 1.0.0
+        specifier: 1.0.1
         version: link:../storage-adapter-memory
 
   packages/plugin-express:
     dependencies:
       "@node-idempotency/core":
-        specifier: 1.0.4
+        specifier: 1.0.5
         version: link:../core
       "@node-idempotency/shared":
-        specifier: 1.0.0
+        specifier: 1.0.1
         version: link:../shared
       "@node-idempotency/storage":
-        specifier: 1.0.1
+        specifier: 1.0.2
         version: link:../storage
       "@node-idempotency/storage-adapter-memory":
-        specifier: 1.0.0
+        specifier: 1.0.1
         version: link:../storage-adapter-memory
       express:
         specifier: ^4.19.1
@@ -115,16 +115,16 @@ importers:
   packages/plugin-fastify:
     dependencies:
       "@node-idempotency/core":
-        specifier: 1.0.4
+        specifier: 1.0.5
         version: link:../core
       "@node-idempotency/shared":
-        specifier: 1.0.0
+        specifier: 1.0.1
         version: link:../shared
       "@node-idempotency/storage":
-        specifier: 1.0.1
+        specifier: 1.0.2
         version: link:../storage
       "@node-idempotency/storage-adapter-memory":
-        specifier: 1.0.0
+        specifier: 1.0.1
         version: link:../storage-adapter-memory
       fastify:
         specifier: ^4.26.2
@@ -142,13 +142,13 @@ importers:
         specifier: ^9.0.0 || ^10.3.3
         version: 10.3.3(@nestjs/common@10.3.3)(@nestjs/platform-express@10.3.3)(reflect-metadata@0.2.1)(rxjs@7.8.1)
       "@node-idempotency/core":
-        specifier: 1.0.4
+        specifier: 1.0.5
         version: link:../core
       "@node-idempotency/shared":
-        specifier: 1.0.0
+        specifier: 1.0.1
         version: link:../shared
       "@node-idempotency/storage":
-        specifier: 1.0.1
+        specifier: 1.0.2
         version: link:../storage
       rxjs:
         specifier: ^7.8.1
@@ -173,16 +173,16 @@ importers:
   packages/shared:
     dependencies:
       "@node-idempotency/core":
-        specifier: 1.0.4
+        specifier: 1.0.5
         version: link:../core
       "@node-idempotency/storage":
-        specifier: 1.0.1
+        specifier: 1.0.2
         version: link:../storage
       "@node-idempotency/storage-adapter-memory":
-        specifier: 1.0.0
+        specifier: 1.0.1
         version: link:../storage-adapter-memory
       "@node-idempotency/storage-adapter-redis":
-        specifier: 1.0.0
+        specifier: 1.0.1
         version: link:../storage-adapter-redis
 
   packages/storage: {}
@@ -190,13 +190,13 @@ importers:
   packages/storage-adapter-memory:
     dependencies:
       "@node-idempotency/storage":
-        specifier: 1.0.1
+        specifier: 1.0.2
         version: link:../storage
 
   packages/storage-adapter-redis:
     dependencies:
       "@node-idempotency/storage":
-        specifier: 1.0.1
+        specifier: 1.0.2
         version: link:../storage
       redis:
         specifier: ^4.6.13

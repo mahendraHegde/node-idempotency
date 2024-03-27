@@ -31,17 +31,17 @@ export class AppModule {}
 
 ```
 
-  - `storage.adapter` can either be `memory`, `redis` or an instance of [`Storage`](https://github.com/mahendraHegde/node-idempotency/tree/main/packages/storage) interface.
-  - `storage.options` are options to the storage client, required for `redis`, is client options of [redis client](https://www.npmjs.com/package/redis).
-  - `idempotencyOptions` are the [`IdempotencyOptions`](https://github.com/mahendraHegde/node-idempotency/blob/main/packages/core/docs/interfaces/IdempotencyOptions.md) passed to `@node-idempotency/core/Idempotency`
+- `storage.adapter` can either be `memory`, `redis` or an instance of [`Storage`](https://github.com/mahendraHegde/node-idempotency/tree/main/packages/storage) interface.
+- `storage.options` are options to the storage client, required for `redis`, is client options of [redis client](https://www.npmjs.com/package/redis).
+- `idempotencyOptions` are the [`IdempotencyOptions`](https://github.com/mahendraHegde/node-idempotency/blob/main/packages/core/docs/interfaces/IdempotencyOptions.md) passed to `@node-idempotency/core/Idempotency`
 
 2. Decorate controllers or handlers
 
-  - Decorating controllers
+- Decorating controllers
 
 ```ts
-import { Controller, Get, Post, HttpCode, Body } from '@nestjs/common';
-import { Idempotent } from '@node-idempotency/nestjs';
+import { Controller, Get, Post, HttpCode, Body } from "@nestjs/common";
+import { Idempotent } from "@node-idempotency/nestjs";
 
 @Controller()
 @Idempotent({ ...idempotencyOptions }) // Override module-level options
@@ -62,11 +62,11 @@ export class CounterController {
 }
 ```
 
-  - Decorating selected handlers
+- Decorating selected handlers
 
 ```ts
-import { Controller, Get, Post, HttpCode, Body } from '@nestjs/common';
-import { Idempotent } from '@node-idempotency/nestjs';
+import { Controller, Get, Post, HttpCode, Body } from "@nestjs/common";
+import { Idempotent } from "@node-idempotency/nestjs";
 
 @Controller()
 export class CounterController {
@@ -86,7 +86,6 @@ export class CounterController {
   }
 }
 ```
-
 
 Library also exports the interceptor, you can use it like you would use any nestjs interceptors(ex: registering globaly)
 

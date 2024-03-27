@@ -1,12 +1,16 @@
 {
   "name": "@node-idempotency/storage",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist/"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mahendraHegde/node-idempotency.git"
+  },
   "scripts": {
     "prepublishOnly": "pnpm build",
     "test": "echo \"Error: no test specified\" && exit 1",

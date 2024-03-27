@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "A Race-Condition free Node.js library that ensures idempotency for requests, preventing unintended duplicate operations.",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mahendraHegde/node-idempotency.git"
+  },
   "scripts": {
     "test": "pnpm --filter  @node-idempotency/* test",
     "test:e2e": "pnpm --filter  @node-idempotency/* test:e2e",
@@ -11,7 +15,8 @@
     "format": "prettier --write .",
     "build": "pnpm --filter  @node-idempotency/* build",
     "typecheck": "pnpm --filter  @node-idempotency/* typecheck",
-    "precommit": "pnpm build && pnpm format && pnpm lint:fix && pnpm test:e2e"
+    "precommit": "pnpm build && pnpm format && pnpm lint:fix && pnpm test:e2e",
+    "prepare:publish": "pnpm changeset version && pnpm install && pnpm precommit"
   },
   "keywords": [
     "nestjs",

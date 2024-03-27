@@ -17,7 +17,6 @@ and powers,
 
 - [`@node-idempotency/fastify`](https://www.npmjs.com/package/@node-idempotency/fastify) - Plug and Play `fastify` plugin for `@node-idempotency/core`
 
-
 #### @node-idempotency/core
 
 if above packages dont meet your needs, you can utilise the core package directly to tweek it as per your needs.
@@ -39,19 +38,21 @@ if its a new request, it marks the request as progress generates fingerprint usi
 `onResponse` handler is called by you when your business logic completes for the first time, so that the response can be stored and the request can be marked as complete.
 
 ```ts
-import { Idempotency } from '@node-idempotency/core';
-import { MemoryStorageAdapter } from '@node-idempotency/storage-adapter-memory';
+import { Idempotency } from "@node-idempotency/core";
+import { MemoryStorageAdapter } from "@node-idempotency/storage-adapter-memory";
 
 // Create an Idempotency instance using a MemoryStorageAdapter
-const idempotency = new Idempotency(new MemoryStorageAdapter(), { ...idempotencyOptions });
+const idempotency = new Idempotency(new MemoryStorageAdapter(), {
+  ...idempotencyOptions,
+});
 
 // On receiving a request, call `onRequest` to validate idempotency
 try {
   const response = await idempotency.onRequest({
-    method: 'POST',
-    headers: { 'idempotency-key': '123' },
+    method: "POST",
+    headers: { "idempotency-key": "123" },
     body: { pay: 100 },
-    path: '/charge',
+    path: "/charge",
     options: { ...idempotencyOptions }, // Optional request-level overrides
   });
 
@@ -68,17 +69,19 @@ try {
 }
 
 // Intercept response to complete the idempotency cycle
-const response = await idempotency.onResponse({
-  method: 'POST',
-  headers: { 'idempotency-key': '123' },
-  body: { pay: 100 },
-  path: '/charge',
-  options: { ...idempotencyOptions }, // Optional request-level overrides
-}, {
-  body: { charge: 'success' }, // or error: your_error
-  additional: { status: 201 },
-});
-
+const response = await idempotency.onResponse(
+  {
+    method: "POST",
+    headers: { "idempotency-key": "123" },
+    body: { pay: 100 },
+    path: "/charge",
+    options: { ...idempotencyOptions }, // Optional request-level overrides
+  },
+  {
+    body: { charge: "success" }, // or error: your_error
+    additional: { status: 201 },
+  },
+);
 ```
 
 check details about the api [here](./packages/core/docs/classes/Idempotency.md)
