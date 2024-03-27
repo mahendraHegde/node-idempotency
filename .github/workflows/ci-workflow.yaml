@@ -46,5 +46,5 @@ jobs:
       - run: pnpm test:cov
 
       - name: Update Coverage Badge
-        if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        if: github.ref == format('refs/heads/{0}', dev)
         uses: we-cli/coverage-badge-action@main
