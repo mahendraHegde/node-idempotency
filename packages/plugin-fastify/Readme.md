@@ -3,6 +3,21 @@
 A Fastify plugin that makes requests idempotent
 Implements `@node-idempotency/core` as fastify plugin.
 
+---
+
+#### Why?
+
+---
+
+Internet requests are unpredictable; clients/proxies may send duplicate or concurrent requests due to retries or network issues. To ensure smooth operation, servers must process each request only once. <i>**This package detects and handles duplicates, preventing issues like double charging the customer**</i>. It's:
+
+- <i>Race Condition free: </i> Ensures consistent behavior even during concurrent requests.
+- <i>Modular:</i> Easily integrates with your storage or existing implementation.(as simple as registering a plugin to fastify)
+- <i>Customizable:</i> options to tweak the library as per your need.
+- <i>[RFC](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/) compliant: </i> Adheres to standards for compatibility with other systems/clients.
+
+---
+
 ##### instal
 
 ```bash

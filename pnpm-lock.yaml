@@ -90,10 +90,10 @@ importers:
   packages/plugin-express:
     dependencies:
       "@node-idempotency/core":
-        specifier: 1.0.5
+        specifier: 1.0.6
         version: link:../core
       "@node-idempotency/shared":
-        specifier: 1.0.1
+        specifier: 1.0.2
         version: link:../shared
       "@node-idempotency/storage":
         specifier: 1.0.2
@@ -115,10 +115,10 @@ importers:
   packages/plugin-fastify:
     dependencies:
       "@node-idempotency/core":
-        specifier: 1.0.5
+        specifier: 1.0.6
         version: link:../core
       "@node-idempotency/shared":
-        specifier: 1.0.1
+        specifier: 1.0.2
         version: link:../shared
       "@node-idempotency/storage":
         specifier: 1.0.2
@@ -142,10 +142,10 @@ importers:
         specifier: ^9.0.0 || ^10.3.3
         version: 10.3.3(@nestjs/common@10.3.3)(@nestjs/platform-express@10.3.3)(reflect-metadata@0.2.1)(rxjs@7.8.1)
       "@node-idempotency/core":
-        specifier: 1.0.5
+        specifier: 1.0.6
         version: link:../core
       "@node-idempotency/shared":
-        specifier: 1.0.1
+        specifier: 1.0.2
         version: link:../shared
       "@node-idempotency/storage":
         specifier: 1.0.2
@@ -173,7 +173,7 @@ importers:
   packages/shared:
     dependencies:
       "@node-idempotency/core":
-        specifier: 1.0.5
+        specifier: 1.0.6
         version: link:../core
       "@node-idempotency/storage":
         specifier: 1.0.2
@@ -7490,6 +7490,7 @@ packages:
       {
         integrity: sha512-i5lLI6iw9AU3Uu4szRNPPEkomnkjRTaVt9hy/bn5g/oSzekBSMeLZblcjP74AW0vBabqERLLIrz+gR8QYR54Tw==,
       }
+    deprecated: This version has a critical bug in fallback handling. Please upgrade to reflect-metadata@0.2.2 or newer.
 
   /regenerator-runtime@0.14.1:
     resolution:

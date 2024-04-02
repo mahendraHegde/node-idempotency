@@ -1,5 +1,11 @@
 # @node-idempotency/core
 
+## 1.0.6
+
+### Patch Changes
+
+- improve readme
+
 ## 1.0.5
 
 ### Patch Changes

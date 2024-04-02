@@ -1,5 +1,12 @@
 # @node-idempotency/shared
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @node-idempotency/core@1.0.6
+
 ## 1.0.1
 
 ### Patch Changes
