@@ -8,7 +8,7 @@
 
 ---
 
-Internet requests are unpredictable; clients/proxies may send duplicate or concurrent requests due to retries or network issues. To ensure smooth operation, servers must process each request only once. <i>**This package detects and handles duplicates, preventing issues like double charging the customer**</i>. It's:
+Network requests are unpredictable; clients/proxies may send duplicate or concurrent requests due to retries or network issues. To ensure smooth operation, servers must process each request only once. <i>**This package detects and handles duplicates, preventing issues like double charging the customer**</i>. It's:
 
 - <i>Race Condition free: </i> Ensures consistent behavior even during concurrent requests.
 - <i>Modular:</i> Easily integrates with your storage or existing implementation.
@@ -105,7 +105,7 @@ Other packages in the monorepo are, click on the links to read detailed uses of 
 
 2. [`@node-idempotency/storage-adapter-memory`](https://github.com/mahendraHegde/node-idempotency/tree/main/packages/storage-adapter-memory) - `In-memory` implementation of `Storage` interface.
 
-3. [`@node-idempotency/storage-adapter-redis`](packages/storage-adapter-redis/Readme.md) - `Redis` implementation of `Storage` interface.(WIP)
+3. [`@node-idempotency/storage-adapter-redis`](packages/storage-adapter-redis/Readme.md) - `Redis` implementation of `Storage` interface.
 
 ---
 
