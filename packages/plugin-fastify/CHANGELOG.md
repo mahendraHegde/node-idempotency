@@ -1,5 +1,15 @@
 # @node-idempotency/fastify
 
+## 1.0.3
+
+### Patch Changes
+
+- 9200b63: update dependencies to express@4.19.1 vulnerability
+- Updated dependencies [9200b63]
+  - @node-idempotency/storage-adapter-memory@1.0.2
+  - @node-idempotency/shared@1.0.3
+  - @node-idempotency/core@1.0.7
+
 ## 1.0.2
 
 ### Patch Changes

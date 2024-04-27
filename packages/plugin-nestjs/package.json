@@ -1,6 +1,6 @@
 {
   "name": "@node-idempotency/nestjs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Nestjs Plugin that provides Race-Condition free idempotency for HTTP requests, preventing unintended duplicate operations.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -44,17 +44,17 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@node-idempotency/core": "1.0.6",
-    "@node-idempotency/shared": "1.0.2",
-    "@node-idempotency/storage": "1.0.2"
+    "@node-idempotency/core": "workspace:*",
+    "@node-idempotency/shared": "workspace:*",
+    "@node-idempotency/storage": "workspace:*"
   },
   "peerDependencies": {
-    "@nestjs/common": "^9.0.0 || ^10.3.3",
-    "@nestjs/core": "^9.0.0 || ^10.3.3",
+    "@nestjs/common": "^9.0.0 || ^10.3.8",
+    "@nestjs/core": "^9.0.0 || ^10.3.8",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@nestjs/platform-fastify": "^10.3.3",
+    "@nestjs/platform-fastify": "^10.3.8",
     "@types/express": "^4.17.21",
     "@types/supertest": "^6.0.2",
     "fastify": "^4.26.2",

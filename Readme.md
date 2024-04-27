@@ -112,3 +112,11 @@ Other packages in the monorepo are, click on the links to read detailed uses of 
 #### Contributing
 
 Read more [here](./Contributing.md)
+
+
+---
+#### Release
+1. pnpm changeset
+2. commit changes
+3. pnpm prepare:publish
+4. pnpm publish -r
