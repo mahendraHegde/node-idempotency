@@ -18,6 +18,10 @@ Network requests are unpredictable; clients/proxies may send duplicate or concur
 
 ---
 
+#### How?
+![No Image](../../flow.png)
+---
+
 ##### instal
 
 ```bash

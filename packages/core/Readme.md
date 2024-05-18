@@ -24,6 +24,9 @@ and powers
 if above packages dont meet your needs, you can utilise the core package directly to tweek it as per your needs.
 
 ---
+#### How?
+![No Image](../../flow.png)
+---
 
 ##### install
 

@@ -24,6 +24,10 @@ and powers,
 - [`@node-idempotency/fastify`](https://www.npmjs.com/package/@node-idempotency/fastify) - Plug and Play `fastify` plugin for `@node-idempotency/core`
 
 ---
+#### How?
+![No Image](flow.png)
+
+---
 
 #### @node-idempotency/core
 

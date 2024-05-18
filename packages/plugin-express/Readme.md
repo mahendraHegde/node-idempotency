@@ -17,6 +17,9 @@ Network requests are unpredictable; clients/proxies may send duplicate or concur
 - <i>[RFC](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/) compliant: </i> Adheres to standards for compatibility with other systems/clients.
 
 ---
+#### How?
+![No Image](../../flow.png)
+---
 
 ##### instal
 
