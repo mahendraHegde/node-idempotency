@@ -11,7 +11,7 @@
     "test": "pnpm --filter  @node-idempotency/* test",
     "test:e2e": "pnpm --filter  @node-idempotency/* test:e2e",
     "test:cov": "pnpm --filter  @node-idempotency/* test:e2e --coverage --coverageReporters=\"json-summary\"",
-    "lint": "eslint -v",
+    "lint": "eslint packages/**/*.ts",
     "prettier": "prettier -c .",
     "lint:fix": "eslint packages/**/*.ts --fix",
     "format": "prettier --write .",
