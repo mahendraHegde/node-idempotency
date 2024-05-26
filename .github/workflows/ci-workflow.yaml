@@ -38,12 +38,16 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-pnpm-store-
 
-      # - name: Install
-      #   run: pnpm install --frozen-lockfile --strict-peer-dependencies
-      # - run: pnpm build
-      # - run: pnpm lint
-      # - run: pnpm prettier
-      # - run: pnpm test:cov
+      - name: install
+        run: pnpm install --frozen-lockfile --strict-peer-dependencies
+      - name: build
+        run: pnpm build
+      - name: lint
+        run: pnpm lint
+      - name: format
+        run: pnpm prettier
+      - name: test
+        run: pnpm test:cov
 
       # - name: Update Coverage Badge
       #   if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
