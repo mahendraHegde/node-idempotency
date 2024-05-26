@@ -1,4 +1,5 @@
 import { type DynamicModule, Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import {
   NodeIdempotencyModule,
   StorageAdapterEnum,
@@ -38,6 +39,56 @@ export class TestModuleRedis {
             },
           },
           cacheTTLMS: 1000,
+        }),
+      ],
+    };
+  }
+}
+
+@Module({})
+export class TestModuleRedisWithFactory {
+  static forRootAsync(): DynamicModule {
+    return {
+      global: true,
+      module: TestModuleRedisWithFactory,
+      controllers: [TestController],
+      imports: [
+        NodeIdempotencyModule.forRootAsync({
+          imports: [ConfigModule.forRoot()],
+          inject: [ConfigService],
+          useFactory: async (configService: ConfigService) => {
+            return {
+              storage: {
+                adapter: StorageAdapterEnum.redis,
+                options: {
+                  url: configService.get("REDIS_URL"),
+                },
+              },
+              cacheTTLMS: 1000,
+            };
+          },
+        }),
+      ],
+    };
+  }
+}
+@Module({})
+export class TestModuleMemoryithFactory {
+  static forRootAsync(): DynamicModule {
+    return {
+      global: true,
+      module: TestModuleMemoryithFactory,
+      controllers: [TestController],
+      imports: [
+        NodeIdempotencyModule.forRootAsync({
+          useFactory: async () => {
+            return {
+              storage: {
+                adapter: StorageAdapterEnum.memory,
+              },
+              cacheTTLMS: 1000,
+            };
+          },
         }),
       ],
     };

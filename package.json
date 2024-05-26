@@ -18,7 +18,7 @@
     "build": "pnpm --filter  @node-idempotency/* build",
     "build:clean": "find packages/* -type d -name 'dist' -exec rm -rf {} \\;",
     "typecheck": "pnpm --filter  @node-idempotency/* typecheck",
-    "precommit": "pnpm build && pnpm format && pnpm lint:fix && pnpm test:e2e",
+    "precommit": "pnpm format && pnpm lint:fix && pnpm build && pnpm test:e2e",
     "prepare:publish": "pnpm changeset version && pnpm install && pnpm precommit"
   },
   "keywords": [

@@ -19,6 +19,7 @@ Network requests are unpredictable; clients/proxies may send duplicate or concur
 ---
 
 #### How?
+
 ![No Image](../../flow.png)
 
 ---
@@ -48,6 +49,42 @@ import { NodeIdempotencyModule } from '@node-idempotency/nestjs';
   ],
 })
 export class AppModule {}
+
+// OR using factory method
+
+import { NodeIdempotencyModule } from '@node-idempotency/nestjs';
+import { type DynamicModule, Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+
+@Module({})
+export class AppModule {
+    static forRootAsync(): DynamicModule {
+    return {
+      global: true,
+      module: AppModule,
+      controllers: [AppController],
+      imports: [
+        NodeIdempotencyModule.forRootAsync({
+          imports: [ConfigModule.forRoot()],
+          inject: [ConfigService],
+          useFactory: async (configService: ConfigService) => {
+            return {
+              storage: {
+                adapter: StorageAdapterEnum.redis,
+                options: {
+                  url: configService.get("REDIS_URL"),
+                },
+              },
+              cacheTTLMS: configService.get("CACHE_TTL"),
+              ...idempotencyOptions, // additional idempotency options
+            };
+          },
+        }),
+      ],
+    };
+  }
+}
+
 
 ```
 
