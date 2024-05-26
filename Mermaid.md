@@ -12,7 +12,7 @@ sequenceDiagram
   Server->>Store: Store Response(Idempotency-Key=1)
   activate Store
   deactivate Store
-  
+
   alt Timed Out/Server Crash/Connection Lost
     Server-xClient: No Repsponse
   else Client Crash
@@ -42,7 +42,7 @@ sequenceDiagram
   Server->>Store: Check Idempotency-Key=2 (In-Progress)
   activate Store
   deactivate Store
-  Server->>Client2: 409 Conflict, Retry-After=1 
+  Server->>Client2: 409 Conflict, Retry-After=1
   deactivate Client2
 
   Server->>Client: 201 Created

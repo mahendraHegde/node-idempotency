@@ -1,3 +1,10 @@
+import {
+  type InjectionToken,
+  type ModuleMetadata,
+  type OptionalFactoryDependency,
+} from "@nestjs/common";
+import { type IdempotencyPluginOptions } from "@node-idempotency/shared";
+
 export interface SerializedAPIException {
   message: string;
   name?: string;
@@ -5,3 +12,12 @@ export interface SerializedAPIException {
   response?: { message: string; statusCode: number };
   status?: number;
 }
+
+export type RootAsyncRegisterOptions =
+  | IdempotencyPluginOptions
+  | (Pick<ModuleMetadata, "imports"> & {
+      useFactory?: (
+        ...args: unknown[]
+      ) => Promise<IdempotencyPluginOptions> | IdempotencyPluginOptions;
+      inject?: Array<InjectionToken | OptionalFactoryDependency>;
+    });

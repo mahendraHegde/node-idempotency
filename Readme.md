@@ -24,7 +24,9 @@ and powers,
 - [`@node-idempotency/fastify`](https://www.npmjs.com/package/@node-idempotency/fastify) - Plug and Play `fastify` plugin for `@node-idempotency/core`
 
 ---
+
 #### How?
+
 ![No Image](flow.png)
 
 ---
@@ -117,9 +119,10 @@ Other packages in the monorepo are, click on the links to read detailed uses of 
 
 Read more [here](./Contributing.md)
 
-
 ---
+
 #### Release
+
 1. pnpm changeset
 2. commit changes
 3. pnpm prepare:publish

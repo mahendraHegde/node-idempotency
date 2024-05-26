@@ -6,14 +6,24 @@ import { FastifyAdapter } from "@nestjs/platform-fastify";
 import { HTTPHeaderEnum } from "@node-idempotency/shared";
 
 import * as request from "supertest";
-import { TestModuleMemory, TestModuleRedis } from "./modules/test/test.module";
+import {
+  TestModuleMemory,
+  TestModuleMemoryithFactory,
+  TestModuleRedis,
+  TestModuleRedisWithFactory,
+} from "./modules/test/test.module";
 import { type Server } from "net";
 const idempotencyKey = "Idempotency-Key";
 const IDEMPOTENCY_REPLAYED_HEADER = HTTPHeaderEnum.idempotentReplayed;
 
 describe("Node-Idempotency", () => {
   ["fastify", "express"].forEach((adapter) => {
-    [TestModuleMemory, TestModuleRedis].forEach((TestModule) => {
+    [
+      TestModuleMemory,
+      TestModuleRedis,
+      TestModuleRedisWithFactory,
+      TestModuleMemoryithFactory,
+    ].forEach((TestModule) => {
       describe(`when ${adapter}:${TestModule.name}`, () => {
         let server: Server;
         let app: INestApplication;
@@ -23,6 +33,7 @@ describe("Node-Idempotency", () => {
           redisServer = new RedisMemoryServer();
           const port = await redisServer.getPort();
           const host = await redisServer.getHost();
+          process.env.REDIS_URL = `redis://${host}:${port}`;
           const module = await Test.createTestingModule({
             imports: [TestModule.forRootAsync({ port, host })],
           }).compile();
