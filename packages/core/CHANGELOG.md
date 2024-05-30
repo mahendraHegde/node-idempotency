@@ -1,5 +1,11 @@
 # @node-idempotency/core
 
+## 1.0.8
+
+### Patch Changes
+
+- 48803ac: add registration with factory method support in nestjs plugin
+
 ## 1.0.7
 
 ### Patch Changes
