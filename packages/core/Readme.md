@@ -27,7 +27,7 @@ if above packages dont meet your needs, you can utilise the core package directl
 
 #### How?
 
-## ![No Image](../../flow.png)
+## ![No Image](https://raw.githubusercontent.com/mahendraHegde/node-idempotency/main/flow.png)
 
 ##### install
 
