@@ -8,9 +8,10 @@ import { MemoryStorageAdapter } from "@node-idempotency/storage-adapter-memory";
 
 describe("Idempotency (Integration Test)", () => {
   let idempotency: Idempotency;
+  let storage: MemoryStorageAdapter;
 
   beforeEach(() => {
-    const storage = new MemoryStorageAdapter();
+    storage = new MemoryStorageAdapter();
     idempotency = new Idempotency(storage);
   });
 
@@ -64,6 +65,43 @@ describe("Idempotency (Integration Test)", () => {
     cachedResponse = await idempotency.onRequest(req);
 
     expect(cachedResponse).toEqual(res);
+  });
+
+  it("should allow overriding cacheKeyPrefix", async () => {
+    const req: IdempotencyParams = {
+      headers: { [HttpHeaderKeysEnum.IDEMPOTENCY_KEY]: "1" },
+      path: "/pay",
+      body: { a: "a" },
+      method: "POST",
+      options: {
+        cacheKeyPrefix: "tenant-1",
+      },
+    };
+    const res = { body: { success: "true" } };
+    const idempotencyRes = await idempotency.onRequest(req);
+    expect(idempotencyRes).toBeUndefined();
+
+    await idempotency.onResponse(req, res);
+
+    const cachedResponse = await idempotency.onRequest(req);
+
+    expect(cachedResponse).toEqual(res);
+
+    expect(
+      await storage.get(`${req.options?.cacheKeyPrefix}:POST:/pay:1`),
+    ).toEqual(
+      '{"status":"COMPLETE","fingerPrint":"f45aa7a9803525391d546d331b22b3ed4583a11a04797feaeb1027b158c65d10","response":{"body":{"success":"true"}}}',
+    );
+
+    // different tenant with same idempotency key
+    const cachedResponse2 = await idempotency.onRequest({
+      ...req,
+      options: {
+        cacheKeyPrefix: "tenant-2",
+      },
+    });
+
+    expect(cachedResponse2).toBeUndefined();
   });
 
   // @TODO add more cases
