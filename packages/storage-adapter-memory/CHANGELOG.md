@@ -1,5 +1,13 @@
 # @node-idempotency/storage-adapter-memory
 
+## 1.0.3
+
+### Patch Changes
+
+- 7456432: add overrides for braces to fix audit issues
+- Updated dependencies [7456432]
+  - @node-idempotency/storage@1.0.3
+
 ## 1.0.2
 
 ### Patch Changes

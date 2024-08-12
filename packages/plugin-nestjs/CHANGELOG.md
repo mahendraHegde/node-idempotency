@@ -1,5 +1,15 @@
 # @node-idempotency/nestjs
 
+## 1.0.6
+
+### Patch Changes
+
+- 7456432: add overrides for braces to fix audit issues
+- Updated dependencies [7456432]
+  - @node-idempotency/core@1.0.9
+  - @node-idempotency/shared@1.0.5
+  - @node-idempotency/storage@1.0.3
+
 ## 1.0.5
 
 ### Patch Changes

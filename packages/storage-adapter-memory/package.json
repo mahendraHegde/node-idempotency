@@ -1,6 +1,6 @@
 {
   "name": "@node-idempotency/storage-adapter-memory",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "in memory storage adapter for node-idempotency",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

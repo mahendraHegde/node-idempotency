@@ -1,5 +1,13 @@
 # @node-idempotency/core
 
+## 1.0.9
+
+### Patch Changes
+
+- 7456432: add overrides for braces to fix audit issues
+- Updated dependencies [7456432]
+  - @node-idempotency/storage@1.0.3
+
 ## 1.0.8
 
 ### Patch Changes

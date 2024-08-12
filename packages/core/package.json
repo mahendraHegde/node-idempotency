@@ -1,6 +1,6 @@
 {
   "name": "@node-idempotency/core",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A Race-Condition free Node.js library that ensures idempotency for requests, preventing unintended duplicate operations.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

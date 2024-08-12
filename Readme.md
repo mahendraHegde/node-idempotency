@@ -126,4 +126,4 @@ Read more [here](./Contributing.md)
 1. pnpm changeset
 2. commit changes
 3. pnpm prepare:publish
-4. pnpm publish -r
+4. pnpm publish -r --filter=\!node-idempotency

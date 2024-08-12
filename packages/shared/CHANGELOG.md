@@ -1,5 +1,16 @@
 # @node-idempotency/shared
 
+## 1.0.5
+
+### Patch Changes
+
+- 7456432: add overrides for braces to fix audit issues
+- Updated dependencies [7456432]
+  - @node-idempotency/core@1.0.9
+  - @node-idempotency/storage@1.0.3
+  - @node-idempotency/storage-adapter-memory@1.0.3
+  - @node-idempotency/storage-adapter-redis@1.0.3
+
 ## 1.0.4
 
 ### Patch Changes
