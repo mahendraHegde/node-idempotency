@@ -17,7 +17,7 @@ export type RootAsyncRegisterOptions =
   | IdempotencyPluginOptions
   | (Pick<ModuleMetadata, "imports"> & {
       useFactory?: (
-        ...args: unknown[]
+        ...args: any[]
       ) => Promise<IdempotencyPluginOptions> | IdempotencyPluginOptions;
       inject?: Array<InjectionToken | OptionalFactoryDependency>;
     });
