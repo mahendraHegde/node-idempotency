@@ -89,10 +89,21 @@ export class Idempotency {
     }
   }
 
-  private getIdempotencyCacheKey(req: IdempotencyParamsWithDefaults): string {
+  private async getIdempotencyCacheKey(
+    req: IdempotencyParamsWithDefaults,
+  ): Promise<string> {
     const idempotencyKey = this.getIdempotencyKey(req);
     const { path, method } = req;
-    return `${req.options.cacheKeyPrefix}:${method}:${path}:${idempotencyKey}`;
+    const keyParams = [
+      req.options.cacheKeyPrefix,
+      method,
+      path,
+      idempotencyKey,
+    ];
+    if (this.options.getExtendsKey) {
+      keyParams.push(await this.options.getExtendsKey(req));
+    }
+    return keyParams.join(":");
   }
 
   private hash(body: Record<string, unknown>): string {
@@ -124,7 +135,7 @@ export class Idempotency {
         status: RequestStatusEnum.IN_PROGRESS,
         fingerPrint,
       };
-      const cacheKey = this.getIdempotencyCacheKey(reqInternal);
+      const cacheKey = await this.getIdempotencyCacheKey(reqInternal);
       this.validateRequest(reqInternal);
       const isNew = await this.storage.setIfNotExists(
         cacheKey,
@@ -166,7 +177,7 @@ export class Idempotency {
     const reqInternal = this.getInternalRequest(req);
     if (await this.isEnabled(reqInternal)) {
       const fingerPrint = this.getFingerPrint(reqInternal);
-      const cacheKey = this.getIdempotencyCacheKey(reqInternal);
+      const cacheKey = await this.getIdempotencyCacheKey(reqInternal);
       const payload: StoragePayload = {
         status: RequestStatusEnum.COMPLETE,
         fingerPrint,

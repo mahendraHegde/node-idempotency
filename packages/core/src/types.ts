@@ -1,44 +1,41 @@
 export interface IdempotencyOptions {
   /**
+   * specifies the header key to look for to get idempotency key case insensitive.
    * @defaultValue `idempotency-key`
-   *
-   * specifies the header key to look for to get idempotency key
-   * case insensitive.
    */
   idempotencyKey?: string;
   /**
-   * @defaultValue `256`
-   *
    * restricts max length of idempotency key
+   * @defaultValue `256`
    */
   keyMaxLength?: number;
   /**
-   * @defaultValue `node-idempotency`
-   *
    * prefix/namespace for cache key
+   * @defaultValue `node-idempotency`
    */
   cacheKeyPrefix?: string;
   /**
-   * @defaultValue `1000 * 60 * 60 * 24(1 day)`
-   *
    * ttl for idempotency
+   * @defaultValue `1000 * 60 * 60 * 24(1 day)`
    */
   cacheTTLMS?: number;
   /**
-   * @defaultValue `false`
-   *
    * if set to `true` requests without idempotency key header will be rejected
+   * @defaultValue false
    */
   enforceIdempotency?: boolean;
 
   /**
-   * @defaultValue `undefined`
-   *
    * custom way to specify which request to skip and which to accept
+   * @defaultValue undefined
    */
   skipRequest?: (
     req: IdempotencyParamsWithDefaults,
   ) => boolean | Promise<boolean>;
+
+  getExtendsKey?: (
+    req: IdempotencyParamsWithDefaults,
+  ) => string | Promise<string>;
 }
 
 export interface IdempotencyParams {
@@ -50,8 +47,11 @@ export interface IdempotencyParams {
 }
 
 export interface IdempotencyParamsWithDefaults extends IdempotencyParams {
-  options: Required<Omit<IdempotencyOptions, "skipRequest">> & {
+  options: Required<
+    Omit<IdempotencyOptions, "skipRequest" | "getExtendsKey">
+  > & {
     skipRequest?: IdempotencyOptions["skipRequest"];
+    getExtendsKey?: IdempotencyOptions["getExtendsKey"];
   };
 }
 
