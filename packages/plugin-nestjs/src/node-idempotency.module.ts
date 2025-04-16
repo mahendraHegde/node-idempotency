@@ -5,7 +5,7 @@ import {
   Inject,
   type Provider,
 } from "@nestjs/common";
-import { NodeIdempotencyInterceptor } from "./interceptors/node-idempotency.iterceptor";
+import { NodeIdempotencyInterceptor } from "./interceptors/node-idempotency.interceptor";
 import {
   buildStorageAdapter,
   type IdempotencyPluginOptions,

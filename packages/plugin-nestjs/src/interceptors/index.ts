@@ -1,1 +1,1 @@
-export * from "./node-idempotency.iterceptor";
+export * from "./node-idempotency.interceptor";
