@@ -1,7 +1,7 @@
 import { type IdempotencyOptions } from "@node-idempotency/core";
 import { IDEMPOTENCY_OPTIONS } from "../constants";
 import { SetMetadata, UseInterceptors, applyDecorators } from "@nestjs/common";
-import { NodeIdempotencyInterceptor } from "../interceptors/node-idempotency.iterceptor";
+import { NodeIdempotencyInterceptor } from "../interceptors/node-idempotency.interceptor";
 
 /**
  * Creates a idempotency interceptor.
