@@ -30,7 +30,11 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@node-idempotency/storage": "workspace:*"
+    "@node-idempotency/storage": "workspace:*",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.10.2"
   },
   "publishConfig": {
     "access": "public"

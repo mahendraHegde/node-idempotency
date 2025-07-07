@@ -1,4 +1,2 @@
-
-export class PostgresStorageAdapter {
-
-}
+export * from "./adapter-postgres";
+export * from "./types";
