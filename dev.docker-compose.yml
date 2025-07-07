@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:17-bullseye
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ''
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DATABASE: postgres
+    ports:
+      - '5432:5432'

@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Run dev containers
+        run: docker compose -f dev.docker-compose.yml up -d
+
       - uses: pnpm/action-setup@v3
         name: Install pnpm
         with:

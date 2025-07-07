@@ -4,13 +4,15 @@ import {
 } from "./types";
 import { Pool, type PoolClient } from "pg";
 import type { StorageAdapter } from "@node-idempotency/storage";
+import { DEFAULT_IDEMPOTENCY_OPTS } from "./defaults";
 
 export class PostgresStorageAdapter implements StorageAdapter {
   readonly #pool: Pool;
   readonly #createdPool: boolean;
   readonly #idempotencyOpts: PostgresIdempotencyOpts;
   readonly #tableId: string;
-  readonly #defaultTtl: number;
+  readonly #defaultTtlMs: number;
+  readonly #clearEntitiesInterval?: NodeJS.Timeout;
 
   constructor({ idempotency = {}, ...opts }: PostgresAdapterOptions) {
     if ("pool" in opts) {
@@ -25,9 +27,17 @@ export class PostgresStorageAdapter implements StorageAdapter {
       );
     }
 
-    this.#idempotencyOpts = idempotency;
-    this.#tableId = getTableId(idempotency);
-    this.#defaultTtl = idempotency.defaultTtl ?? 15 * 60;
+    this.#idempotencyOpts = { ...DEFAULT_IDEMPOTENCY_OPTS, ...idempotency };
+    this.#tableId = getTableId(this.#idempotencyOpts);
+    this.#defaultTtlMs = idempotency.defaultTtlMs ?? 15 * 60;
+
+    if (this.#idempotencyOpts.clearExpiredEntitiesIntervalMs) {
+      this.#clearEntitiesInterval = setInterval(() => {
+        this.clearExpiredEntries().catch((err) => {
+          console.error("Error clearing expired idempotency entries:", err);
+        });
+      }, this.#idempotencyOpts.clearExpiredEntitiesIntervalMs);
+    }
   }
 
   async connect(): Promise<void> {
@@ -40,6 +50,7 @@ export class PostgresStorageAdapter implements StorageAdapter {
   }
 
   async disconnect(): Promise<void> {
+    clearInterval(this.#clearEntitiesInterval);
     if (!this.#createdPool) {
       return;
     }
@@ -51,7 +62,9 @@ export class PostgresStorageAdapter implements StorageAdapter {
     const {
       rows: [row],
     } = await this.#pool.query(
-      `SELECT data FROM ${this.#tableId} WHERE key = $1`,
+      `SELECT data FROM ${this.#tableId}
+        WHERE key = $1 AND expires_at > NOW()
+      `,
       [key],
     );
     return row?.data || undefined;
@@ -60,9 +73,9 @@ export class PostgresStorageAdapter implements StorageAdapter {
   async set(
     key: string,
     val: string,
-    { ttl = this.#defaultTtl }: { ttl?: number | undefined },
+    { ttl = this.#defaultTtlMs }: { ttl?: number | undefined },
   ): Promise<void> {
-    const expiresAt = new Date(Date.now() + ttl * 1000);
+    const expiresAt = new Date(Date.now() + ttl);
     await this.#pool.query(
       `INSERT INTO ${this.#tableId} (key, data, expires_at)
        VALUES ($1, $2, $3)
@@ -76,15 +89,25 @@ export class PostgresStorageAdapter implements StorageAdapter {
   async setIfNotExists(
     key: string,
     val: string,
-    { ttl = this.#defaultTtl }: { ttl?: number },
+    { ttl = this.#defaultTtlMs }: { ttl?: number },
   ): Promise<boolean> {
+    const expiresAt = new Date(Date.now() + ttl);
+    // we'll use a MERGE query to insert the key if it doesn't exist,
+    // or update the existing key with the new value and expiration time,
+    // if the row is expired
     const { rowCount } = await this.#pool.query(
-      `INSERT INTO ${this.#tableId} (key, data, expires_at)
-         VALUES ($1, $2, $3)
-         ON CONFLICT (key) DO NOTHING
-         RETURNING key
-        `,
-      [key, val, ttl ? new Date(Date.now() + ttl * 1000) : null],
+      `MERGE INTO ${this.#tableId} AS target
+       USING (
+        SELECT $1 AS key, $2 AS data, $3::timestamptz AS expires_at
+      ) AS source
+       ON target.key = source.key
+       WHEN NOT MATCHED THEN
+         INSERT (key, data, expires_at)
+          VALUES (source.key, source.data, source.expires_at)
+       WHEN MATCHED AND target.expires_at < NOW() THEN
+         UPDATE SET data = source.data, expires_at = source.expires_at
+        RETURNING target.key;`,
+      [key, val, expiresAt],
     );
     return !!rowCount && rowCount > 0;
   }
@@ -94,14 +117,21 @@ export class PostgresStorageAdapter implements StorageAdapter {
       key,
     ]);
   }
+
+  async clearExpiredEntries(): Promise<void> {
+    await this.#pool.query(
+      `SELECT "${this.#idempotencyOpts.idempotencySchemaName}"
+        ."remove_expired_idempotency_entries"();`,
+    );
+  }
 }
 
 async function setup(
   client: PoolClient,
   {
-    idempotencyTableName = "idempotency",
-    idempotencySchemaName = "node_idempotency",
-    tableType = "unlogged",
+    idempotencyTableName,
+    idempotencySchemaName,
+    tableType,
   }: PostgresIdempotencyOpts,
 ): Promise<void> {
   const ddl = SQL_DDL.replaceAll("{{schema_name}}", idempotencySchemaName)
@@ -111,8 +141,8 @@ async function setup(
 }
 
 function getTableId({
-  idempotencyTableName = "idempotency",
-  idempotencySchemaName = "node-idempotency",
+  idempotencySchemaName,
+  idempotencyTableName,
 }: PostgresIdempotencyOpts): string {
   return `"${idempotencySchemaName}"."${idempotencyTableName}"`;
 }
@@ -132,9 +162,7 @@ CREATE INDEX IF NOT EXISTS idx_{{table_name}}_expires_at
   ON "{{schema_name}}"."{{table_name}}" (expires_at);
 
 CREATE OR REPLACE FUNCTION "{{schema_name}}".remove_expired_idempotency_entries() RETURNS void AS $$
-BEGIN
-  DELETE FROM "{{schema_name}}"."{{table_name}}"
+DELETE FROM "{{schema_name}}"."{{table_name}}"
   WHERE expires_at < NOW();
-END;
 $$ LANGUAGE sql;
 `;
