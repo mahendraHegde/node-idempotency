@@ -72,6 +72,37 @@ export class TestModuleRedisWithFactory {
     };
   }
 }
+
+@Module({})
+export class TestModuleRedisWithFactoryWithInprogressWait {
+  static forRootAsync(): DynamicModule {
+    return {
+      global: true,
+      module: TestModuleRedisWithFactory,
+      controllers: [TestController],
+      imports: [
+        NodeIdempotencyModule.forRootAsync({
+          imports: [ConfigModule.forRoot()],
+          inject: [ConfigService],
+          useFactory: async (configService: ConfigService) => {
+            return {
+              storage: {
+                adapter: StorageAdapterEnum.redis,
+                options: {
+                  url: configService.get("REDIS_URL"),
+                },
+              },
+              cacheTTLMS: 1000,
+              inProgressStrategy: {
+                wait: true,
+              },
+            };
+          },
+        }),
+      ],
+    };
+  }
+}
 @Module({})
 export class TestModuleMemoryithFactory {
   static forRootAsync(): DynamicModule {

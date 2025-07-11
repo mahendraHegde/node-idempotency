@@ -27,6 +27,12 @@ export class Idempotency {
       keyMaxLength: IDEMPOTENCY_KEY_LEN,
       cacheTTLMS: IDEMPOTENCY_CACHE_TTL_MS,
       enforceIdempotency: false,
+      inProgressStrategy: {
+        wait: false,
+        pollingIntervalMs: 100,
+        maxWaitMs: 5000,
+        ...(options?.inProgressStrategy ?? {}),
+      },
       ...options,
     };
   }
@@ -138,10 +144,43 @@ export class Idempotency {
         }
         const data = JSON.parse(cached) as StoragePayload<BodyType, ErrorType>;
         if (data.status === RequestStatusEnum.IN_PROGRESS) {
-          throw new IdempotencyError(
-            "A request is outstanding for this Idempotency-Key",
-            IdempotencyErrorCodes.REQUEST_IN_PROGRESS,
-          );
+          const strategy = reqInternal.options.inProgressStrategy;
+          if (strategy.wait) {
+            const pollInterval = strategy.pollingIntervalMs ?? 100;
+            const maxWaitMs = strategy.maxWaitMs ?? 5000;
+            const start = Date.now();
+            let latestData = data;
+            while (Date.now() - start < maxWaitMs) {
+              await new Promise((resolve) => setTimeout(resolve, pollInterval));
+              const latestCached = await this.storage.get(cacheKey);
+              if (!latestCached) break;
+              latestData = JSON.parse(latestCached) as StoragePayload<
+                BodyType,
+                ErrorType
+              >;
+              if (latestData.status !== RequestStatusEnum.IN_PROGRESS) {
+                break;
+              }
+            }
+            if (latestData.status === RequestStatusEnum.IN_PROGRESS) {
+              throw new IdempotencyError(
+                "Timed out waiting for in-progress request to complete",
+                IdempotencyErrorCodes.REQUEST_IN_PROGRESS,
+              );
+            }
+            if (fingerPrint !== latestData.fingerPrint) {
+              throw new IdempotencyError(
+                "Idempotency-Key is already used",
+                IdempotencyErrorCodes.IDEMPOTENCY_FINGERPRINT_MISSMATCH,
+              );
+            }
+            return latestData.response;
+          } else {
+            throw new IdempotencyError(
+              "A request is outstanding for this Idempotency-Key",
+              IdempotencyErrorCodes.REQUEST_IN_PROGRESS,
+            );
+          }
         } else {
           if (fingerPrint !== data.fingerPrint) {
             throw new IdempotencyError(

@@ -11,6 +11,7 @@ import {
   TestModuleMemoryithFactory,
   TestModuleRedis,
   TestModuleRedisWithFactory,
+  TestModuleRedisWithFactoryWithInprogressWait,
 } from "./modules/test/test.module";
 import { type Server } from "net";
 const idempotencyKey = "Idempotency-Key";
@@ -23,6 +24,7 @@ describe("Node-Idempotency", () => {
       TestModuleRedis,
       TestModuleRedisWithFactory,
       TestModuleMemoryithFactory,
+      TestModuleRedisWithFactoryWithInprogressWait,
     ].forEach((TestModule) => {
       describe(`when ${adapter}:${TestModule.name}`, () => {
         let server: Server;
@@ -143,7 +145,7 @@ describe("Node-Idempotency", () => {
           ).toBeUndefined();
         });
 
-        it("should return a conflict when parallel requests are made", async () => {
+        it("should return a conflict when parallel requests are made when inprogressWait is false", async () => {
           const [res1, res2] = await Promise.all([
             request(server)
               .get("/slow")
@@ -163,17 +165,25 @@ describe("Node-Idempotency", () => {
           const conflictBody = res1.status !== 200 ? res1.body : res2.body;
           const conflictHeader =
             res1.status !== 200 ? res1.headers : res2.headers;
-          expect(success).not.toBe(conflict);
           expect(success).toBe(200);
-          expect(conflict).toBe(409);
+          if (
+            TestModule.name ===
+            TestModuleRedisWithFactoryWithInprogressWait.name
+          ) {
+            expect(conflict).toBe(200);
+            expect(res1.body).toEqual(res2.body);
+          } else {
+            expect(success).not.toBe(conflict);
+            expect(conflict).toBe(409);
+            expect(conflictBody).toEqual({
+              message: "A request is outstanding for this Idempotency-Key",
+              statusCode: 409,
+            });
+            expect(
+              conflictHeader[HTTPHeaderEnum.retryAfter.toLowerCase()],
+            ).toEqual("1");
+          }
           expect(successBody).toEqual("0");
-          expect(conflictBody).toEqual({
-            message: "A request is outstanding for this Idempotency-Key",
-            statusCode: 409,
-          });
-          expect(
-            conflictHeader[HTTPHeaderEnum.retryAfter.toLowerCase()],
-          ).toEqual("1");
         });
 
         it("should return error when different body is used for the same key", async () => {

@@ -32,6 +32,22 @@ export interface IdempotencyOptions {
   enforceIdempotency?: boolean;
 
   /**
+   * Strategy for handling in-progress requests for the same Idempotency-Key.
+   * @defaultValue { wait: false, pollingIntervalMs: 100, maxWaitMs: 5000 }
+   *
+   * - wait: If true, when a request is in progress for the same Idempotency-Key,
+   *         this request will wait for the in-progress request to complete and return
+   *         the cached response, instead of throwing an error.
+   * - pollingIntervalMs: How often (ms) to poll for completion.
+   * - maxWaitMs: Maximum time (ms) to wait before timing out.
+   */
+  inProgressStrategy?: {
+    wait?: boolean;
+    pollingIntervalMs?: number;
+    maxWaitMs?: number;
+  };
+
+  /**
    * @defaultValue `undefined`
    *
    * custom way to specify which request to skip and which to accept
