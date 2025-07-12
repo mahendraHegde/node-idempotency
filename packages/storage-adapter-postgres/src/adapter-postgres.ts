@@ -29,7 +29,7 @@ export class PostgresStorageAdapter implements StorageAdapter {
 
     this.#idempotencyOpts = { ...DEFAULT_IDEMPOTENCY_OPTS, ...idempotency };
     this.#tableId = getTableId(this.#idempotencyOpts);
-    this.#defaultTtlMs = idempotency.defaultTtlMs ?? 15 * 60;
+    this.#defaultTtlMs = this.#idempotencyOpts.defaultTtlMs;
 
     if (this.#idempotencyOpts.clearExpiredEntitiesIntervalMs) {
       this.#clearEntitiesInterval = setInterval(() => {
