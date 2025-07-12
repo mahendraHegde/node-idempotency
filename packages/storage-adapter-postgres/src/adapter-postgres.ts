@@ -12,7 +12,8 @@ export class PostgresStorageAdapter implements StorageAdapter {
   readonly #idempotencyOpts: PostgresIdempotencyOpts;
   readonly #tableId: string;
   readonly #defaultTtlMs: number;
-  readonly #clearEntitiesInterval?: NodeJS.Timeout;
+  #clearEntitiesTimeout?: NodeJS.Timeout;
+  #disconnected = false;
 
   constructor({ idempotency = {}, ...opts }: PostgresAdapterOptions) {
     if ("pool" in opts) {
@@ -32,11 +33,7 @@ export class PostgresStorageAdapter implements StorageAdapter {
     this.#defaultTtlMs = this.#idempotencyOpts.defaultTtlMs;
 
     if (this.#idempotencyOpts.clearExpiredEntitiesIntervalMs) {
-      this.#clearEntitiesInterval = setInterval(() => {
-        this.clearExpiredEntries().catch((err) => {
-          console.error("Error clearing expired idempotency entries:", err);
-        });
-      }, this.#idempotencyOpts.clearExpiredEntitiesIntervalMs);
+      this.#scheduleNextClearExpiredEntries();
     }
   }
 
@@ -50,7 +47,8 @@ export class PostgresStorageAdapter implements StorageAdapter {
   }
 
   async disconnect(): Promise<void> {
-    clearInterval(this.#clearEntitiesInterval);
+    clearTimeout(this.#clearEntitiesTimeout);
+    this.#disconnected = true;
     if (!this.#createdPool) {
       return;
     }
@@ -118,6 +116,22 @@ export class PostgresStorageAdapter implements StorageAdapter {
       `SELECT "${this.#idempotencyOpts.idempotencySchemaName}"
         ."remove_expired_idempotency_entries"();`,
     );
+  }
+
+  #scheduleNextClearExpiredEntries(): void {
+    if (this.#disconnected) {
+      return;
+    }
+
+    this.#clearEntitiesTimeout = setTimeout(() => {
+      this.clearExpiredEntries()
+        .catch((err) => {
+          console.error("Error clearing expired entries:", err);
+        })
+        .finally(() => {
+          this.#scheduleNextClearExpiredEntries();
+        });
+    }, this.#idempotencyOpts.clearExpiredEntitiesIntervalMs);
   }
 }
 
