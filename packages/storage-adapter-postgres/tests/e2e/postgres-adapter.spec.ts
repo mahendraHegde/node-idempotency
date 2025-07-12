@@ -1,21 +1,19 @@
 import { Pool } from "pg";
+import { PostgresMock } from "pgmock";
 import { setTimeout } from "timers/promises";
 import { PostgresStorageAdapter } from "../../src";
 import { DEFAULT_IDEMPOTENCY_OPTS } from "../../src/defaults";
 
 describe("Postgres Adapter", () => {
   let storage: PostgresStorageAdapter;
+  let mock: PostgresMock;
   let pool: Pool;
 
   beforeAll(async () => {
-    pool = new Pool({
-      user: "postgres",
-      host: "localhost",
-      port: 5432,
-    });
-    storage = new PostgresStorageAdapter({
-      pool,
-    });
+    mock = await PostgresMock.create();
+    const connectionStr = await mock.listen(5432);
+    pool = new Pool({ connectionString: connectionStr });
+    storage = new PostgresStorageAdapter({ pool });
 
     await pool.query(
       `DROP SCHEMA IF EXISTS
@@ -23,10 +21,12 @@ describe("Postgres Adapter", () => {
     );
 
     await storage.connect();
-  });
+  }, 30_000);
 
   afterAll(async () => {
     await storage.disconnect();
+    await pool.end();
+    mock.destroy();
   });
 
   describe("setIfNotExists", () => {

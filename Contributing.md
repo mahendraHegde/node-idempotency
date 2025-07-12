@@ -16,7 +16,6 @@
 2. fork the repo.
 3. clone the repo.
 4. run `pnpm i && pnpm build`
-5. run dev containers, `docker compose -f dev.docker-compose.yml up -d`
 
 #### Steps
 

@@ -212,6 +212,9 @@ importers:
       '@types/pg':
         specifier: ^8.10.2
         version: 8.15.4
+      pgmock:
+        specifier: ^1.0.3
+        version: 1.0.3
 
   packages/storage-adapter-redis:
     dependencies:
@@ -2780,6 +2783,9 @@ packages:
       pg-native:
         optional: true
 
+  pgmock@1.0.3:
+    resolution: {integrity: sha512-5Lo17esUvwOq9TvAZMeFZRB69+QiSCpLrdwbsxDqGoj6yVZi+6umMiJvFiWwgo+YlNfWe1kY9Djw360T/J0AWg==}
+
   pgpass@1.0.5:
     resolution: {integrity: sha512-FdW9r/jQZhSeohs1Z3sI1yxFQNFvMcnmfuj4WBMUTxOrAyLMaTcE1aAMBiTlbMNaXvBCQuVi0R7hd8udDSP7ug==}
 
@@ -3223,6 +3229,7 @@ packages:
   supertest@7.1.1:
     resolution: {integrity: sha512-aI59HBTlG9e2wTjxGJV+DygfNLgnWbGdZxiA/sgrnNNikIW8lbDvCtF6RnhZoJ82nU7qv7ZLjrvWqCEm52fAmw==}
     engines: {node: '>=14.18.0'}
+    deprecated: Please upgrade to supertest v7.1.3+, see release notes at https://github.com/forwardemail/supertest/releases/tag/v7.1.3 - maintenance is supported by Forward Email @ https://forwardemail.net
 
   supports-color@2.0.0:
     resolution: {integrity: sha512-KKNVtd6pCYgPIKU4cp2733HWYCpplQhddZLBUryaAHou723x+FRzQ5Df824Fj+IyyuiQTRoub4SnIFfIcrp70g==}
@@ -6727,6 +6734,8 @@ snapshots:
       pgpass: 1.0.5
     optionalDependencies:
       pg-cloudflare: 1.2.7
+
+  pgmock@1.0.3: {}
 
   pgpass@1.0.5:
     dependencies:
