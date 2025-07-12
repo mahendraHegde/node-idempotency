@@ -75,14 +75,13 @@ export class PostgresStorageAdapter implements StorageAdapter {
     val: string,
     { ttl = this.#defaultTtlMs }: { ttl?: number | undefined },
   ): Promise<void> {
-    const expiresAt = new Date(Date.now() + ttl);
     await this.#pool.query(
       `INSERT INTO ${this.#tableId} (key, data, expires_at)
-       VALUES ($1, $2, $3)
+       VALUES ($1, $2, NOW() + $3 * INTERVAL '1 millisecond')
        ON CONFLICT (key) DO UPDATE SET
         data = EXCLUDED.data,
         expires_at = EXCLUDED.expires_at`,
-      [key, val, expiresAt],
+      [key, val, ttl],
     );
   }
 
@@ -91,23 +90,19 @@ export class PostgresStorageAdapter implements StorageAdapter {
     val: string,
     { ttl = this.#defaultTtlMs }: { ttl?: number },
   ): Promise<boolean> {
-    const expiresAt = new Date(Date.now() + ttl);
     // we'll use a MERGE query to insert the key if it doesn't exist,
     // or update the existing key with the new value and expiration time,
     // if the row is expired
     const { rowCount } = await this.#pool.query(
-      `MERGE INTO ${this.#tableId} AS target
-       USING (
-        SELECT $1 AS key, $2 AS data, $3::timestamptz AS expires_at
-      ) AS source
-       ON target.key = source.key
-       WHEN NOT MATCHED THEN
-         INSERT (key, data, expires_at)
-          VALUES (source.key, source.data, source.expires_at)
-       WHEN MATCHED AND target.expires_at < NOW() THEN
-         UPDATE SET data = source.data, expires_at = source.expires_at
-        RETURNING target.key;`,
-      [key, val, expiresAt],
+      `INSERT INTO ${this.#tableId} (key, data, expires_at)
+        VALUES ($1, $2, NOW() + $3 * INTERVAL '1 millisecond')
+        ON CONFLICT (key) 
+        DO UPDATE SET
+          data = EXCLUDED.data,
+          expires_at = EXCLUDED.expires_at
+        WHERE ${this.#tableId}.expires_at < NOW()
+        RETURNING key, expires_at;`,
+      [key, val, ttl],
     );
     return !!rowCount && rowCount > 0;
   }
