@@ -1,0 +1,43 @@
+{
+  "name": "@node-idempotency/storage-adapter-postgres",
+  "version": "1.0.0",
+  "description": "postgres storage adapter for node-idempotency",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mahendraHegde/node-idempotency.git"
+  },
+  "scripts": {
+    "prepublishOnly": "pnpm build",
+    "test:e2e": "jest --config ./tests/jest-e2e.json --runInBand --forceExit",
+    "build": "tsc -p ./tsconfig.build.json",
+    "typecheck": "tsc -b"
+  },
+  "keywords": [
+    "postgres storage adapter",
+    "node-idempotency",
+    "idempotency",
+    "deduplicate",
+    "request-idempotency",
+    "http-idempotency",
+    "api-idempotency",
+    "distributed-systems",
+    "request-deduplication"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@node-idempotency/storage": "workspace:*",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.10.2",
+    "pgmock": "^1.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

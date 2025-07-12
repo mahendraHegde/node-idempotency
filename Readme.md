@@ -113,6 +113,8 @@ Other packages in the monorepo are, click on the links to read detailed uses of 
 
 3. [`@node-idempotency/storage-adapter-redis`](packages/storage-adapter-redis/Readme.md) - `Redis` implementation of `Storage` interface.
 
+4. [`@node-idempotency/storage-adapter-postgres`](packages/storage-adapter-postgres/Readme.md) - `Postgres` implementation of `Storage` interface.
+
 ---
 
 #### Contributing
