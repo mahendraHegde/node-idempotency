@@ -142,19 +142,15 @@ export class Idempotency {
             "A request is outstanding for this Idempotency-Key",
             IdempotencyErrorCodes.REQUEST_IN_PROGRESS,
           );
+        } else {
+          if (fingerPrint !== data.fingerPrint) {
+            throw new IdempotencyError(
+              "Idempotency-Key is already used",
+              IdempotencyErrorCodes.IDEMPOTENCY_FINGERPRINT_MISSMATCH,
+            );
+          }
+          return data.response;
         }
-        if (fingerPrint !== data.fingerPrint) {
-          throw new IdempotencyError(
-            "Idempotency-Key is already used",
-            IdempotencyErrorCodes.IDEMPOTENCY_FINGERPRINT_MISSMATCH,
-          );
-        }
-        if (data.response?.error) {
-          // don't return cached uncaught errors, allow to retry
-          return undefined
-        }
-
-        return data.response;
       }
     }
   }
@@ -179,6 +175,14 @@ export class Idempotency {
       await this.storage.set(cacheKey, JSON.stringify(payload), {
         ttl: reqInternal.options.cacheTTLMS,
       });
+    }
+  }
+
+  async clearCache(req: IdempotencyParams): Promise<void> {
+    const reqInternal = this.getInternalRequest(req);
+    if (await this.isEnabled(reqInternal)) {
+      const cacheKey = this.getIdempotencyCacheKey(reqInternal);
+      await this.storage.delete(cacheKey);
     }
   }
 }
