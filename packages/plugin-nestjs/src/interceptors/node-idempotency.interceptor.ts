@@ -184,12 +184,6 @@ export class NodeIdempotencyInterceptor implements NestInterceptor {
         return response;
       }),
       catchError((err) => {
-        if (idempotencyReq.options?.skipErrorsCache) {
-          // do not cache the error itself, clear the cache key and allow subsequent requests to retry
-          this.nodeIdempotency.clearCache(idempotencyReq).catch(() => {});
-          throw err;
-        }
-
         const httpException = this.buildError(err as SerializedAPIException);
         const error = err instanceof HttpException ? err : httpException;
         const res: IdempotencyResponse = {
