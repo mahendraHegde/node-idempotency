@@ -2,6 +2,7 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import testController from "./test.controller";
 import {
+  type IdempotencyPluginOptions,
   StorageAdapterEnum,
   idempotencyAsMiddleware,
 } from "../../../../src/index";
@@ -22,13 +23,16 @@ function errorHandler(
     .json({ ...err, message: err.message });
 }
 
-export default async (): Promise<express.Application> => {
+const createApp = async (
+  options: Partial<IdempotencyPluginOptions> = {},
+): Promise<express.Application> => {
   const app = express();
   app.use(bodyParser.json());
   const middleware = await idempotencyAsMiddleware({
     storage: { adapter: StorageAdapterEnum.memory },
     enforceIdempotency: true,
     keyMaxLength: 3,
+    ...options,
   });
   app.use(middleware);
   testController(app);
@@ -36,3 +40,16 @@ export default async (): Promise<express.Application> => {
 
   return app;
 };
+
+export const createAppNoWait = async (): Promise<express.Application> =>
+  createApp();
+export const createAppWait = async (): Promise<express.Application> =>
+  createApp({
+    inProgressStrategy: {
+      wait: true,
+      pollingIntervalMs: 50,
+      maxWaitMs: 10000,
+    },
+  });
+
+export default createAppNoWait;

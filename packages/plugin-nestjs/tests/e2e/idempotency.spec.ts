@@ -11,19 +11,23 @@ import {
   TestModuleMemoryithFactory,
   TestModuleRedis,
   TestModuleRedisWithFactory,
+  TestModuleRedisWithFactoryWithInprogressWait,
 } from "./modules/test/test.module";
 import { type Server } from "net";
 const idempotencyKey = "Idempotency-Key";
 const IDEMPOTENCY_REPLAYED_HEADER = HTTPHeaderEnum.idempotentReplayed;
 
 describe("Node-Idempotency", () => {
+  const moduleConfigs = [
+    { module: TestModuleMemory, waitEnabled: false },
+    { module: TestModuleRedis, waitEnabled: false },
+    { module: TestModuleRedisWithFactory, waitEnabled: false },
+    { module: TestModuleMemoryithFactory, waitEnabled: false },
+    { module: TestModuleRedisWithFactoryWithInprogressWait, waitEnabled: true },
+  ];
+
   ["fastify", "express"].forEach((adapter) => {
-    [
-      TestModuleMemory,
-      TestModuleRedis,
-      TestModuleRedisWithFactory,
-      TestModuleMemoryithFactory,
-    ].forEach((TestModule) => {
+    moduleConfigs.forEach(({ module: TestModule, waitEnabled }) => {
       describe(`when ${adapter}:${TestModule.name}`, () => {
         let server: Server;
         let app: INestApplication;
@@ -143,37 +147,57 @@ describe("Node-Idempotency", () => {
           ).toBeUndefined();
         });
 
-        it("should return a conflict when parallel requests are made", async () => {
-          const [res1, res2] = await Promise.all([
-            request(server)
-              .get("/slow")
-              .set({ [idempotencyKey]: "2" })
-              .then((res) => res)
-              .catch((err) => err),
-            request(server)
-              .get("/slow")
-              .set({ [idempotencyKey]: "2" })
-              .then((res) => res)
-              .catch((err) => err),
-          ]);
+        it(`should ${
+          waitEnabled
+            ? "allow parallel requests to succeed when wait strategy is enabled"
+            : "return a conflict when parallel requests are made"
+        }`, async () => {
+          if (waitEnabled) {
+            const [res1, res2] = await Promise.all([
+              request(server)
+                .get("/slow")
+                .set({ [idempotencyKey]: "2" }),
+              request(server)
+                .get("/slow")
+                .set({ [idempotencyKey]: "2" }),
+            ]);
 
-          const success = res1.status === 200 ? res1.status : res2.status;
-          const conflict = res1.status !== 200 ? res1.status : res2.status;
-          const successBody = res1.status === 200 ? res1.text : res2.text;
-          const conflictBody = res1.status !== 200 ? res1.body : res2.body;
-          const conflictHeader =
-            res1.status !== 200 ? res1.headers : res2.headers;
-          expect(success).not.toBe(conflict);
-          expect(success).toBe(200);
-          expect(conflict).toBe(409);
-          expect(successBody).toEqual("0");
-          expect(conflictBody).toEqual({
-            message: "A request is outstanding for this Idempotency-Key",
-            statusCode: 409,
-          });
-          expect(
-            conflictHeader[HTTPHeaderEnum.retryAfter.toLowerCase()],
-          ).toEqual("1");
+            expect(res1.status).toBe(200);
+            expect(res2.status).toBe(200);
+            expect(res1.text).toEqual(res2.text);
+            expect(res1.text).toEqual("0");
+          } else {
+            const [res1, res2] = await Promise.all([
+              request(server)
+                .get("/slow")
+                .set({ [idempotencyKey]: "2" })
+                .then((res) => res)
+                .catch((err) => err),
+              request(server)
+                .get("/slow")
+                .set({ [idempotencyKey]: "2" })
+                .then((res) => res)
+                .catch((err) => err),
+            ]);
+
+            const success = res1.status === 200 ? res1.status : res2.status;
+            const conflict = res1.status !== 200 ? res1.status : res2.status;
+            const successBody = res1.status === 200 ? res1.text : res2.text;
+            const conflictBody = res1.status !== 200 ? res1.body : res2.body;
+            const conflictHeader =
+              res1.status !== 200 ? res1.headers : res2.headers;
+            expect(success).not.toBe(conflict);
+            expect(success).toBe(200);
+            expect(conflict).toBe(409);
+            expect(successBody).toEqual("0");
+            expect(conflictBody).toEqual({
+              message: "A request is outstanding for this Idempotency-Key",
+              statusCode: 409,
+            });
+            expect(
+              conflictHeader[HTTPHeaderEnum.retryAfter.toLowerCase()],
+            ).toEqual("1");
+          }
         });
 
         it("should return error when different body is used for the same key", async () => {

@@ -1,4 +1,4 @@
-import fastify from "fastify";
+import fastify, { type FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
 import testController from "./test.controller";
 import {
@@ -7,12 +7,31 @@ import {
   StorageAdapterEnum,
 } from "../../../../src/index";
 
-const server = fastify();
-void server.register(fp<IdempotencyPluginOptions>(idempotencyAsPlugin), {
+const createServer = (options: IdempotencyPluginOptions): FastifyInstance => {
+  const server = fastify();
+  void server.register(
+    fp<IdempotencyPluginOptions>(idempotencyAsPlugin),
+    options,
+  );
+  testController(server);
+  return server;
+};
+
+export const serverNoWait = createServer({
   storage: { adapter: StorageAdapterEnum.memory },
   enforceIdempotency: true,
   keyMaxLength: 3,
 });
-testController(server);
 
-export default server;
+export const serverWait = createServer({
+  storage: { adapter: StorageAdapterEnum.memory },
+  enforceIdempotency: true,
+  keyMaxLength: 3,
+  inProgressStrategy: {
+    wait: true,
+    pollingIntervalMs: 50,
+    maxWaitMs: 10000,
+  },
+});
+
+export default serverNoWait;

@@ -1,5 +1,15 @@
 # @node-idempotency/nestjs
 
+## 1.0.7
+
+### Patch Changes
+
+- upgrade dependencies
+- Updated dependencies
+  - @node-idempotency/core@1.0.10
+  - @node-idempotency/shared@1.0.6
+  - @node-idempotency/storage@1.0.4
+
 ## 1.0.6
 
 ### Patch Changes

@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[packages/core/src/idempotency.ts:20](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/idempotency.ts#L20)
+[packages/core/src/idempotency.ts:20](https://github.com/mahendraHegde/idempotent-http/blob/7f08fdae1302a799af29559614eee1e2c94cb6f7/packages/core/src/idempotency.ts#L20)
 
 ## Properties
 
@@ -46,7 +46,7 @@
 
 #### Defined in
 
-[packages/core/src/idempotency.ts:19](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/idempotency.ts#L19)
+[packages/core/src/idempotency.ts:19](https://github.com/mahendraHegde/idempotent-http/blob/7f08fdae1302a799af29559614eee1e2c94cb6f7/packages/core/src/idempotency.ts#L19)
 
 ## Methods
 
@@ -79,7 +79,7 @@ to be called on receiving the request, if the key is already cached, returns or 
 
 #### Defined in
 
-[packages/core/src/idempotency.ts:112](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/idempotency.ts#L112)
+[packages/core/src/idempotency.ts:122](https://github.com/mahendraHegde/idempotent-http/blob/7f08fdae1302a799af29559614eee1e2c94cb6f7/packages/core/src/idempotency.ts#L122)
 
 ---
 
@@ -110,4 +110,4 @@ subsequent requests can use cached response.
 
 #### Defined in
 
-[packages/core/src/idempotency.ts:157](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/idempotency.ts#L157)
+[packages/core/src/idempotency.ts:201](https://github.com/mahendraHegde/idempotent-http/blob/7f08fdae1302a799af29559614eee1e2c94cb6f7/packages/core/src/idempotency.ts#L201)

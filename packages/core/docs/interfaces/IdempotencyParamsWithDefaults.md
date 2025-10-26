@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:45](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L45)
+[packages/core/src/types.ts:63](https://github.com/mahendraHegde/idempotent-http/blob/7f08fdae1302a799af29559614eee1e2c94cb6f7/packages/core/src/types.ts#L63)
 
 ---
 
@@ -44,7 +44,7 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:43](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L43)
+[packages/core/src/types.ts:61](https://github.com/mahendraHegde/idempotent-http/blob/7f08fdae1302a799af29559614eee1e2c94cb6f7/packages/core/src/types.ts#L61)
 
 ---
 
@@ -58,7 +58,7 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:46](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L46)
+[packages/core/src/types.ts:64](https://github.com/mahendraHegde/idempotent-http/blob/7f08fdae1302a799af29559614eee1e2c94cb6f7/packages/core/src/types.ts#L64)
 
 ---
 
@@ -72,7 +72,7 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:51](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L51)
+[packages/core/src/types.ts:69](https://github.com/mahendraHegde/idempotent-http/blob/7f08fdae1302a799af29559614eee1e2c94cb6f7/packages/core/src/types.ts#L69)
 
 ---
 
@@ -86,4 +86,4 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:44](https://github.com/mahendraHegde/idempotent-http/blob/865df0d/packages/core/src/types.ts#L44)
+[packages/core/src/types.ts:62](https://github.com/mahendraHegde/idempotent-http/blob/7f08fdae1302a799af29559614eee1e2c94cb6f7/packages/core/src/types.ts#L62)

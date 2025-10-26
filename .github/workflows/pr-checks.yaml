@@ -1,9 +1,11 @@
-name: CI Pipeline
+name: PR Checks
 
 on:
-  push:
-    branches: [main]
   pull_request:
+    types: [opened]
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -11,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x]
+        node-version: [16.x, 18.x, 20.x, 22.x]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
