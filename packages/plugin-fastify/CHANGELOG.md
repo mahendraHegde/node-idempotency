@@ -1,5 +1,16 @@
 # @node-idempotency/fastify
 
+## 1.0.7
+
+### Patch Changes
+
+- ea6035c: Add inprogress strategy support
+- Updated dependencies [ea6035c]
+  - @node-idempotency/storage-adapter-memory@1.0.5
+  - @node-idempotency/storage@1.0.5
+  - @node-idempotency/shared@1.0.7
+  - @node-idempotency/core@1.0.11
+
 ## 1.0.6
 
 ### Patch Changes

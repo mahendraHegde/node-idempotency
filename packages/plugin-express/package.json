@@ -1,6 +1,6 @@
 {
   "name": "@node-idempotency/express",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Express middleware to provide Race-Condition free idempotency for HTTP requests, preventing unintended duplicate operations.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
