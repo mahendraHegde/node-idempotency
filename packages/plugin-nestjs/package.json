@@ -1,6 +1,6 @@
 {
   "name": "@node-idempotency/nestjs",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Nestjs Plugin that provides Race-Condition free idempotency for HTTP requests, preventing unintended duplicate operations.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

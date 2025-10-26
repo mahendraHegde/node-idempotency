@@ -1,5 +1,13 @@
 # @node-idempotency/storage-adapter-redis
 
+## 1.0.5
+
+### Patch Changes
+
+- ea6035c: Add inprogress strategy support
+- Updated dependencies [ea6035c]
+  - @node-idempotency/storage@1.0.5
+
 ## 1.0.4
 
 ### Patch Changes

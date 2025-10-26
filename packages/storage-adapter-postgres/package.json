@@ -1,6 +1,6 @@
 {
   "name": "@node-idempotency/storage-adapter-postgres",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "postgres storage adapter for node-idempotency",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

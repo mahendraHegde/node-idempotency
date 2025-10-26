@@ -1,5 +1,13 @@
 # @node-idempotency/core
 
+## 1.0.11
+
+### Patch Changes
+
+- ea6035c: Add inprogress strategy support
+- Updated dependencies [ea6035c]
+  - @node-idempotency/storage@1.0.5
+
 ## 1.0.10
 
 ### Patch Changes
