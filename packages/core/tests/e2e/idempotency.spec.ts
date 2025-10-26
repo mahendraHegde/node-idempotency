@@ -104,5 +104,57 @@ describe("Idempotency (Integration Test)", () => {
     expect(cachedResponse2).toBeUndefined();
   });
 
+  it("should wait for in-progress request and return response when completed", async () => {
+    const req: IdempotencyParams = {
+      headers: { [HttpHeaderKeysEnum.IDEMPOTENCY_KEY]: "wait-test" },
+      path: "/wait",
+      body: { test: "wait" },
+      method: "POST",
+      options: {
+        inProgressStrategy: {
+          wait: true,
+          pollingIntervalMs: 10,
+          maxWaitMs: 1000,
+        },
+      },
+    };
+    const res = { body: { result: "done" } };
+
+    // First request starts
+    const firstRes = await idempotency.onRequest(req);
+    expect(firstRes).toBeUndefined();
+
+    // Second request waits
+    const secondPromise = idempotency.onRequest(req);
+
+    await idempotency.onResponse(req, res);
+    const secondRes = await secondPromise;
+    expect(secondRes).toEqual(res);
+  });
+
+  it("should throw error when waiting times out", async () => {
+    const req: IdempotencyParams = {
+      headers: { [HttpHeaderKeysEnum.IDEMPOTENCY_KEY]: "timeout-test" },
+      path: "/timeout",
+      body: { test: "timeout" },
+      method: "POST",
+      options: {
+        inProgressStrategy: {
+          wait: true,
+          pollingIntervalMs: 10,
+          maxWaitMs: 100,
+        },
+      },
+    };
+
+    // First request starts
+    await idempotency.onRequest(req);
+
+    // Second request waits but times out
+    await expect(idempotency.onRequest(req)).rejects.toThrow(
+      "Timed out waiting for in-progress request to complete",
+    );
+  });
+
   // @TODO add more cases
 });

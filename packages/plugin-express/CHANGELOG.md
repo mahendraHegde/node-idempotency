@@ -1,5 +1,16 @@
 # @node-idempotency/express
 
+## 1.0.6
+
+### Patch Changes
+
+- upgrade dependencies
+- Updated dependencies
+  - @node-idempotency/core@1.0.10
+  - @node-idempotency/shared@1.0.6
+  - @node-idempotency/storage@1.0.4
+  - @node-idempotency/storage-adapter-memory@1.0.4
+
 ## 1.0.5
 
 ### Patch Changes

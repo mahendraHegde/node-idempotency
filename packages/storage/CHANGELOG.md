@@ -1,5 +1,11 @@
 # @node-idempotency/storage
 
+## 1.0.4
+
+### Patch Changes
+
+- upgrade dependencies
+
 ## 1.0.3
 
 ### Patch Changes

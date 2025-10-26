@@ -1,5 +1,13 @@
 # @node-idempotency/core
 
+## 1.0.10
+
+### Patch Changes
+
+- upgrade dependencies
+- Updated dependencies
+  - @node-idempotency/storage@1.0.4
+
 ## 1.0.9
 
 ### Patch Changes

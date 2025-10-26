@@ -1,5 +1,13 @@
 # @node-idempotency/storage-adapter-memory
 
+## 1.0.4
+
+### Patch Changes
+
+- upgrade dependencies
+- Updated dependencies
+  - @node-idempotency/storage@1.0.4
+
 ## 1.0.3
 
 ### Patch Changes
