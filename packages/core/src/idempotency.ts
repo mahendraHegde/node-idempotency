@@ -206,6 +206,12 @@ export class Idempotency {
     if (await this.isEnabled(reqInternal)) {
       const fingerPrint = this.getFingerPrint(reqInternal);
       const cacheKey = this.getIdempotencyCacheKey(reqInternal);
+
+      if (res.error && req.options?.skipErrorsCache) {
+        // do not cache the error itself, clear the cache key and allow subsequent requests to retry
+        await this.storage.delete(cacheKey);
+      }
+
       const payload: StoragePayload = {
         status: RequestStatusEnum.COMPLETE,
         fingerPrint,

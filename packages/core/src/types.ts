@@ -30,6 +30,12 @@ export interface IdempotencyOptions {
    * if set to `true` requests without idempotency key header will be rejected
    */
   enforceIdempotency?: boolean;
+  /**
+   * @defaultValue `false`
+   *
+   * if set to `true` responses with errors will not be cached
+   */
+  skipErrorsCache?: boolean;
 
   /**
    * Strategy for handling in-progress requests for the same Idempotency-Key.
