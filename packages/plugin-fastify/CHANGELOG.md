@@ -1,5 +1,14 @@
 # @node-idempotency/fastify
 
+## 1.0.8
+
+### Patch Changes
+
+- Updated dependencies [cc69a58]
+- Updated dependencies [cc69a58]
+  - @node-idempotency/shared@1.0.8
+  - @node-idempotency/core@1.1.0
+
 ## 1.0.7
 
 ### Patch Changes
