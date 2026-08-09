@@ -1,5 +1,24 @@
 # @node-idempotency/express
 
+## 1.1.0
+
+### Minor Changes
+
+- cc69a58: Add a function form to the `idempotencyKey` option. In addition to a header-name string, `idempotencyKey` now accepts a resolver `(req) => string | undefined`, so the key can be derived from the request body, namespaced per tenant, or computed however the app needs (return `undefined` to skip idempotency for that request).
+
+  To support this, plugins now pass the raw framework request through on `IdempotencyParams.request` (typed `unknown` to keep the core framework-agnostic), so resolvers — and `skipRequest` — can read framework context such as the authenticated user/tenant. The Express plugin forwards its `Request`.
+
+### Patch Changes
+
+- cc69a58: Fix `@node-idempotency/shared` publishing with an empty package (no `dist/`). `dist` is gitignored and `shared` was missing the `files: ["dist/"]` allow-list that every other package has, so npm fell back to `.gitignore` and dropped the compiled output. This made `require("@node-idempotency/express")` throw `MODULE_NOT_FOUND` for `@node-idempotency/shared/dist/index.js` at load.
+
+  Fix `@node-idempotency/express` swallowing non-`IdempotencyError` failures in the success handler. A storage/backend error while reserving or reading the cache was caught but neither responded to nor passed to `next()`, leaving the request hanging until it timed out. Such errors are now propagated via `next(err)`.
+
+- Updated dependencies [cc69a58]
+- Updated dependencies [cc69a58]
+  - @node-idempotency/shared@1.0.8
+  - @node-idempotency/core@1.1.0
+
 ## 1.0.7
 
 ### Patch Changes
