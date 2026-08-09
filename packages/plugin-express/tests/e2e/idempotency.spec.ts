@@ -1,6 +1,7 @@
 import * as request from "supertest";
 import type * as express from "express";
-import { createAppNoWait, createAppWait } from "./modules/test/test.module";
+import { createApp, createAppNoWait, createAppWait } from "./modules/test/test.module";
+import { type StorageAdapter } from "@node-idempotency/storage";
 import { HTTPHeaderEnum } from "@node-idempotency/shared";
 const idempotencyKey = "Idempotency-Key";
 // const server = fastifyInstance as unknown as Server
@@ -178,5 +179,81 @@ describe("Node-Idempotency", () => {
         ).toBeUndefined();
       });
     });
+  });
+});
+
+describe("Node-Idempotency — idempotencyKey resolver", () => {
+  it("derives the key from a request-body field (no header) and replays on reuse", async () => {
+    const app = await createApp({
+      enforceIdempotency: false,
+      keyMaxLength: 256,
+      idempotencyKey: (req) =>
+        (req.body as { number?: number } | undefined)?.number?.toString(),
+    });
+
+    const res1 = await request(app).post("/").send({ number: 7 }).expect(201);
+    const res2 = await request(app).post("/").send({ number: 7 }).expect(201);
+    expect(
+      res1.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
+    ).toBeUndefined();
+    expect(res2.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()]).toEqual(
+      "true",
+    );
+    // Replay returns the first response's cached body (same derived key).
+    expect(res2.text).toEqual(res1.text);
+
+    // A different derived key is a different request — it runs fresh (not replayed).
+    const res3 = await request(app).post("/").send({ number: 8 }).expect(201);
+    expect(
+      res3.headers[IDEMPOTENCY_REPLAYED_HEADER.toLowerCase()],
+    ).toBeUndefined();
+    expect(res3.text).not.toEqual(res1.text);
+  });
+
+  it("passes the raw framework request through to the resolver", async () => {
+    let sawExpressRequest = false;
+    const app = await createApp({
+      enforceIdempotency: false,
+      idempotencyKey: (req) => {
+        const raw = req.request as { method?: string } | undefined;
+        if (raw && typeof raw.method === "string") sawExpressRequest = true;
+        return (req.headers["idempotency-key"] as string) ?? undefined;
+      },
+    });
+
+    await request(app)
+      .post("/")
+      .set({ [idempotencyKey]: "1" })
+      .send({ number: 1 })
+      .expect(201);
+    expect(sawExpressRequest).toBe(true);
+  });
+});
+
+describe("Node-Idempotency — storage failure handling", () => {
+  it("propagates a storage error via next(err) instead of hanging the request", async () => {
+    const throwingStorage: StorageAdapter = {
+      async setIfNotExists() {
+        throw new Error("storage down");
+      },
+      async set() {
+        /* no-op */
+      },
+      async get() {
+        return undefined;
+      },
+    };
+    const app = await createApp({
+      enforceIdempotency: false,
+      storage: { adapter: throwingStorage },
+    });
+
+    // Before the fix this hung (no response, no next()); now the error surfaces
+    // via the app's error handler instead of timing out.
+    await request(app)
+      .post("/")
+      .set({ [idempotencyKey]: "1" })
+      .send({ number: 1 })
+      .expect(500);
   });
 });

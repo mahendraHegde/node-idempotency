@@ -23,7 +23,7 @@ function errorHandler(
     .json({ ...err, message: err.message });
 }
 
-const createApp = async (
+export const createApp = async (
   options: Partial<IdempotencyPluginOptions> = {},
 ): Promise<express.Application> => {
   const app = express();

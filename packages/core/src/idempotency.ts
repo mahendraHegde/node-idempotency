@@ -59,8 +59,14 @@ export class Idempotency {
   private getIdempotencyKey(
     req: IdempotencyParamsWithDefaults,
   ): string | undefined {
+    const idempotencyKey = req.options.idempotencyKey;
+    // A resolver function derives the key from the request (body field, tenant
+    // namespace, etc.); a string is the header name to read it from.
+    if (typeof idempotencyKey === "function") {
+      return idempotencyKey(req);
+    }
     const key = Object.keys(req.headers).find(
-      (key) => key.toLowerCase() === req.options.idempotencyKey.toLowerCase(),
+      (key) => key.toLowerCase() === idempotencyKey.toLowerCase(),
     );
     return key ? (req.headers[key] as string) : undefined;
   }

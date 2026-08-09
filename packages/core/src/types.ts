@@ -2,10 +2,14 @@ export interface IdempotencyOptions {
   /**
    * @defaultValue `idempotency-key`
    *
-   * specifies the header key to look for to get idempotency key
-   * case insensitive.
+   * How to obtain the idempotency key for a request. Either:
+   * - a `string`: the (case-insensitive) header name to read the key from; or
+   * - a function `(req) => string | undefined`: derive the key from the request
+   *   — its headers, body, method, path, or the raw framework `request` a plugin
+   *   passes through. Return `undefined` to treat the request as non-idempotent.
+   *   Useful to key off a body field, or to namespace the key (e.g. per tenant).
    */
-  idempotencyKey?: string;
+  idempotencyKey?: string | IdempotencyKeyResolver;
   /**
    * @defaultValue `256`
    *
@@ -63,7 +67,24 @@ export interface IdempotencyParams {
   body?: Record<string, unknown>;
   method?: string;
   options?: IdempotencyOptions;
+  /**
+   * The raw framework request (e.g. the Express `Request`), passed through by
+   * plugins so an {@link IdempotencyKeyResolver} (or `skipRequest`) can read
+   * framework-specific context such as the authenticated user/tenant. Left as
+   * `unknown` to keep the core framework-agnostic — resolvers cast it.
+   */
+  request?: unknown;
 }
+
+/**
+ * Derives the idempotency key from a request. Return `undefined` to treat the
+ * request as non-idempotent. Receives the same params the core operates on,
+ * including the raw framework {@link IdempotencyParams.request} when a plugin
+ * provides it.
+ */
+export type IdempotencyKeyResolver = (
+  req: IdempotencyParams,
+) => string | undefined;
 
 export interface IdempotencyParamsWithDefaults extends IdempotencyParams {
   options: Required<Omit<IdempotencyOptions, "skipRequest">> & {

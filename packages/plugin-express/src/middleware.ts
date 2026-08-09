@@ -78,6 +78,9 @@ const successHandler = (nodeIdempotency: Idempotency): ExpressMiddleware => {
       body: request.body as Record<string, unknown>,
       path: request.url,
       method: request.method,
+      // Pass the raw Express request through so an `idempotencyKey` resolver (or
+      // `skipRequest`) can read framework context (auth/tenant, etc.).
+      request,
     };
     try {
       const idempotencyResponse: IdempotencyResponse | undefined =
@@ -126,6 +129,11 @@ const successHandler = (nodeIdempotency: Idempotency): ExpressMiddleware => {
           setHeaders(response, { [HTTPHeaderEnum.retryAfter]: "1" });
         }
         void response.status(status);
+        next(err);
+      } else {
+        // Any non-idempotency error (e.g. a storage/backend failure while
+        // reserving or reading the cache) must be propagated, not swallowed —
+        // swallowing left the request hanging with no response and no next().
         next(err);
       }
     }
