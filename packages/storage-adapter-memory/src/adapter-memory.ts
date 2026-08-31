@@ -47,4 +47,8 @@ export class MemoryStorageAdapter implements StorageAdapter {
     }
     return val?.item;
   }
+
+  async delete(key: string): Promise<void> {
+    this.cache.delete(key);
+  }
 }

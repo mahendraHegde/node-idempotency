@@ -50,4 +50,8 @@ export class RedisStorageAdapter implements StorageAdapter {
     const val = await this.client.get(key);
     return val ?? undefined;
   }
+
+  async delete(key: string): Promise<void> {
+    await this.client.del(key);
+  }
 }
